@@ -1,3 +1,5 @@
+package state;
+
 public enum Direction {
 
     UPLEFT(-2, -1),

@@ -1,3 +1,5 @@
+package state;
+
 import java.util.*;
 
 public class BoardState implements Cloneable {
@@ -194,7 +196,7 @@ public class BoardState implements Cloneable {
 
     @Override
     public String toString() {
-        var sj = new StringJoiner(",", "[", "]");
+        var sj = new StringJoiner(",", "{", "}");
         for (var position : positions) {
             sj.add(position.toString());
         }

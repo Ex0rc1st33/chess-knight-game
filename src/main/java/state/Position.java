@@ -1,3 +1,5 @@
+package state;
+
 import java.util.Objects;
 
 public class Position implements Cloneable {
@@ -53,7 +55,7 @@ public class Position implements Cloneable {
 
     @Override
     public String toString() {
-        return String.format("(%d,%d)", row, col);
+        return String.format("[%d,%d]", row, col);
     }
 
 }
