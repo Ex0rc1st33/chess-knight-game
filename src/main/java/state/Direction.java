@@ -12,6 +12,7 @@ public enum Direction {
     LEFTUP(-1, -2);
 
     private final int rowChange;
+
     private final int colChange;
 
     Direction(int rowChange, int colChange) {

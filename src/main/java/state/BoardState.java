@@ -8,70 +8,58 @@ public class BoardState implements Cloneable {
 
     public static final int BOARD_COLUMNCOUNT = 3;
 
-    public static final int[] BLACK_KNIGHTS = new int[]{0, 1, 2};
-
-    public static final int[] WHITE_KNIGHTS = new int[]{3, 4, 5};
-
-    private Position[] positions;
+    private Knight[] knights;
 
     private Color color;
 
     public BoardState() {
-        this(Color.WHITE, new Position(0, 0),
-                new Position(0, 1),
-                new Position(0, 2),
-                new Position(3, 0),
-                new Position(3, 1),
-                new Position(3, 2)
+        this(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK),
+                new Knight(new Position(0, 1), Color.BLACK),
+                new Knight(new Position(0, 2), Color.BLACK),
+                new Knight(new Position(3, 0), Color.WHITE),
+                new Knight(new Position(3, 1), Color.WHITE),
+                new Knight(new Position(3, 2), Color.WHITE)
         );
     }
 
-    public BoardState(Color color, Position... positions) {
-        checkPositions(positions);
-        this.positions = deepClone(positions);
+    public BoardState(Color color, Knight... knights) {
+        this.knights = deepClone(knights);
         this.color = color;
+        checkPositions(knights);
     }
 
-    private void checkPositions(Position[] positions) {
-        if (positions.length != 6) {
+    private void checkPositions(Knight[] knights) {
+        if (knights.length != 6) {
             throw new IllegalArgumentException();
         }
-        for (var position : positions) {
-            if (!isOnBoard(position)) {
+
+        for (var knight : knights) {
+            if (!isOnBoard(knight.getPosition())) {
                 throw new IllegalArgumentException();
             }
         }
-        for (int i = 0; i < positions.length; i++) {
-            for (int j = 0; j < positions.length; j++) {
-                if (i != j && positions[i].equals(positions[j])) {
+
+        for (int i = 0; i < knights.length; i++) {
+            for (int j = 0; j < knights.length; j++) {
+                if (i != j && knights[i].getPosition().equals(knights[j].getPosition())) {
                     throw new IllegalArgumentException();
                 }
             }
         }
-        List<Position> attackedTiles = new ArrayList<>();
-        int from;
-        int to;
-        for (int i = 0; i < positions.length; i++) {
-            if (i < WHITE_KNIGHTS[0]) {
-                from = WHITE_KNIGHTS[0];
-                to = WHITE_KNIGHTS[WHITE_KNIGHTS.length - 1];
-            } else {
-                from = BLACK_KNIGHTS[0];
-                to = BLACK_KNIGHTS[BLACK_KNIGHTS.length - 1];
-            }
-            for (int j = from; j <= to; j++) {
-                attackedTiles.addAll(getAttackedTiles(positions[j]));
-                for (Position pos : attackedTiles) {
-                    if (pos.equals(positions[i]))
-                        throw new IllegalArgumentException();
-                }
-                attackedTiles.clear();
+
+        for (int i = 0; i < knights.length; i++) {
+            if (isAttacked(knights[i], knights[i].getPosition(), knights)) {
+                throw new IllegalArgumentException();
             }
         }
     }
 
-    public Position getPosition(int n) {
-        return positions[n].clone();
+    public Knight[] getKnights() {
+        return knights;
+    }
+
+    public Knight getKnight(int n) {
+        return knights[n].clone();
     }
 
     public Color getColor() {
@@ -79,44 +67,39 @@ public class BoardState implements Cloneable {
     }
 
     public boolean isGoal() {
-        return haveSwitchedPositions(BLACK_KNIGHTS, WHITE_KNIGHTS);
+        for (Knight knight : knights) {
+            if (knight.getColor() == Color.BLACK && knight.getPosition().getRow() != 3) {
+                return false;
+            }
+            if (knight.getColor() == Color.WHITE && knight.getPosition().getRow() != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean canMove(int knightIndex, Direction direction) {
-        if ((color == Color.WHITE && knightIndex >= BLACK_KNIGHTS[0] && knightIndex <= BLACK_KNIGHTS[BLACK_KNIGHTS.length - 1]) ||
-                (color == Color.BLACK && knightIndex >= WHITE_KNIGHTS[0] && knightIndex <= WHITE_KNIGHTS[WHITE_KNIGHTS.length - 1])) {
+        if (knightIndex < 0 || knightIndex >= knights.length) {
             return false;
         }
 
-        Position target = positions[knightIndex].getTarget(direction);
+        if (!color.equals(knights[knightIndex].getColor())) {
+            return false;
+        }
+
+        Position target = knights[knightIndex].getPosition().getTarget(direction);
         if (!isOnBoard(target) || !isEmpty(target)) {
             return false;
         }
 
-        List<Position> attackedTiles = new ArrayList<>();
-        int from;
-        int to;
-        if (color == Color.WHITE) {
-            from = BLACK_KNIGHTS[0];
-            to = BLACK_KNIGHTS[BLACK_KNIGHTS.length - 1];
-        } else {
-            from = WHITE_KNIGHTS[0];
-            to = WHITE_KNIGHTS[WHITE_KNIGHTS.length - 1];
-        }
-        for (int i = from; i <= to; i++) {
-            attackedTiles.addAll(getAttackedTiles(positions[i]));
-            for (Position pos : attackedTiles) {
-                if (pos.equals(target)) {
-                    return false;
-                }
-            }
-            attackedTiles.clear();
+        if (isAttacked(knights[knightIndex], target, knights)) {
+            return false;
         }
         return true;
     }
 
     public void move(int knightIndex, Direction direction) {
-        positions[knightIndex].setTarget(direction);
+        knights[knightIndex].getPosition().setTarget(direction);
         color = color == Color.WHITE ? Color.BLACK : Color.WHITE;
     }
 
@@ -130,40 +113,34 @@ public class BoardState implements Cloneable {
         return legalMoves;
     }
 
-    private boolean haveSwitchedPositions(int[] blacks, int[] whites) {
-        for (int black : blacks) {
-            if (positions[black].getRow() != 3)
-                return false;
-        }
-        for (int white : whites) {
-            if (positions[white].getRow() != 0)
-                return false;
-        }
-        return true;
-    }
-
     private boolean isOnBoard(Position position) {
         return position.getRow() >= 0 && position.getRow() < BOARD_ROWCOUNT &&
                 position.getCol() >= 0 && position.getCol() < BOARD_COLUMNCOUNT;
     }
 
     private boolean isEmpty(Position position) {
-        for (var p : positions) {
-            if (p.equals(position)) {
+        for (Knight knight : knights) {
+            if (knight.getPosition().equals(position)) {
                 return false;
             }
         }
         return true;
     }
 
-    private List<Position> getAttackedTiles(Position position) {
-        List<Position> attacked = new ArrayList<>();
-        for (Direction direction : Direction.values()) {
-            Position pos = position.getTarget(direction);
-            if (isOnBoard(pos))
-                attacked.add(pos);
+    private boolean isAttacked(Knight knight, Position target, Knight[] knights) {
+        Position attackedFrom;
+        for (Direction dir : Direction.values()) {
+            attackedFrom = target.getTarget(dir);
+            if (isOnBoard(attackedFrom) && !isEmpty(attackedFrom)) {
+                for (int j = 0; j < knights.length; j++) {
+                    if (knights[j].getPosition().equals(attackedFrom) &&
+                            !knights[j].getColor().equals(knight.getColor())) {
+                        return true;
+                    }
+                }
+            }
         }
-        return attacked;
+        return false;
     }
 
     @Override
@@ -174,12 +151,12 @@ public class BoardState implements Cloneable {
         if (!(o instanceof BoardState)) {
             return false;
         }
-        return Arrays.equals(positions, ((BoardState) o).positions);
+        return Arrays.equals(knights, ((BoardState) o).knights) && this.color == ((BoardState) o).color;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(positions);
+        return Arrays.hashCode(knights) + color.hashCode();
     }
 
     @Override
@@ -190,23 +167,25 @@ public class BoardState implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
-        copy.positions = deepClone(positions);
+        copy.knights = deepClone(knights);
+        copy.color = this.color;
         return copy;
     }
 
     @Override
     public String toString() {
         var sj = new StringJoiner(",", "{", "}");
-        for (var position : positions) {
+        sj.add(color.toString());
+        for (var position : knights) {
             sj.add(position.toString());
         }
         return sj.toString();
     }
 
-    private static Position[] deepClone(Position[] a) {
-        Position[] copy = a.clone();
-        for (var i = 0; i < a.length; i++) {
-            copy[i] = a[i].clone();
+    private static Knight[] deepClone(Knight[] k) {
+        Knight[] copy = k.clone();
+        for (var i = 0; i < k.length; i++) {
+            copy[i] = k[i].clone();
         }
         return copy;
     }

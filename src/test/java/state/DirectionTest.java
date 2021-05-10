@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DirectionTest {
 
     @Test
-    void of() {
+    void testOf() {
         assertEquals(Direction.UPLEFT, Direction.of(-2, -1));
         assertEquals(Direction.UPRIGHT, Direction.of(-2, 1));
         assertEquals(Direction.RIGHTUP, Direction.of(-1, 2));
@@ -19,7 +19,7 @@ public class DirectionTest {
     }
 
     @Test
-    void of_shouldThrowIllegalArgumentException() {
+    void testOf_shouldThrowIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> Direction.of(1, 1));
         assertThrows(IllegalArgumentException.class, () -> Direction.of(1, 0));
         assertThrows(IllegalArgumentException.class, () -> Direction.of(-3, -1));

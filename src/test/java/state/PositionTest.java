@@ -15,7 +15,7 @@ public class PositionTest {
     }
 
     @Test
-    void getTarget() {
+    void testGetTarget() {
         assertEquals(new Position(-2, -1), position.getTarget(Direction.UPLEFT));
         assertEquals(new Position(-2, 1), position.getTarget(Direction.UPRIGHT));
         assertEquals(new Position(-1, 2), position.getTarget(Direction.RIGHTUP));
@@ -27,49 +27,49 @@ public class PositionTest {
     }
 
     @Test
-    void setTarget_upleft() {
+    void testSetTarget_upleft() {
         position.setTarget(Direction.UPLEFT);
         assertEquals(new Position(-2, -1), position);
     }
 
     @Test
-    void setTarget_upright() {
+    void testSetTarget_upright() {
         position.setTarget(Direction.UPRIGHT);
         assertEquals(new Position(-2, 1), position);
     }
 
     @Test
-    void setTarget_rightup() {
+    void testSetTarget_rightup() {
         position.setTarget(Direction.RIGHTUP);
         assertEquals(new Position(-1, 2), position);
     }
 
     @Test
-    void setTarget_rightdown() {
+    void testSetTarget_rightdown() {
         position.setTarget(Direction.RIGHTDOWN);
         assertEquals(new Position(1, 2), position);
     }
 
     @Test
-    void setTarget_downright() {
+    void testSetTarget_downright() {
         position.setTarget(Direction.DOWNRIGHT);
         assertEquals(new Position(2, 1), position);
     }
 
     @Test
-    void setTarget_downleft() {
+    void testSetTarget_downleft() {
         position.setTarget(Direction.DOWNLEFT);
         assertEquals(new Position(2, -1), position);
     }
 
     @Test
-    void setTarget_leftdown() {
+    void testSetTarget_leftdown() {
         position.setTarget(Direction.LEFTDOWN);
         assertEquals(new Position(1, -2), position);
     }
 
     @Test
-    void setTarget_leftup() {
+    void testSetTarget_leftup() {
         position.setTarget(Direction.LEFTUP);
         assertEquals(new Position(-1, -2), position);
     }

@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Position implements Cloneable {
 
     private int row;
+
     private int col;
 
     public Position(int row, int col) {
