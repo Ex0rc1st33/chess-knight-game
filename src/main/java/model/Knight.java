@@ -1,24 +1,38 @@
-package state;
+package model;
 
 import java.util.Objects;
 
+/**
+ * Represents a knight chess piece.
+ */
 public class Knight implements Cloneable {
 
     private Position position;
-
     private Color color;
 
+    /**
+     * Creates a {@code Knight} object.
+     *
+     * @param position the position (2D representation) of the knight piece
+     * @param color    the color of the knight piece
+     */
     public Knight(Position position, Color color) {
         this.position = position;
         this.color = color;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
+    /**
+     * {@return the position of the knight piece}
+     */
     public Position getPosition() {
         return position;
+    }
+
+    /**
+     * {@return the color of the knight piece}
+     */
+    public Color getColor() {
+        return color;
     }
 
     @Override
