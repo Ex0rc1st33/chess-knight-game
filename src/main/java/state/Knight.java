@@ -26,14 +26,15 @@ public class Knight implements Cloneable {
         if (o == this) {
             return true;
         }
-        return (o instanceof Knight k) && k.getPosition().getRow() == position.getRow() &&
-                k.getPosition().getCol() == position.getCol() &&
-                k.getColor() == color;
+        if (!(o instanceof Knight)) {
+            return false;
+        }
+        return ((Knight) o).position.equals(position) && ((Knight) o).color == color;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position.getRow(), position.getCol());
+        return Objects.hash(position, color);
     }
 
     @Override
@@ -51,6 +52,6 @@ public class Knight implements Cloneable {
 
     @Override
     public String toString() {
-        return String.format("[%d,%d],%s", position.getRow(), position.getCol(), color.toString());
+        return String.format("[%s,%s]", position.toString(), color.toString());
     }
 }

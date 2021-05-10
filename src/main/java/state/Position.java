@@ -35,7 +35,10 @@ public class Position implements Cloneable {
         if (o == this) {
             return true;
         }
-        return (o instanceof Position p) && p.row == row && p.col == col;
+        if (!(o instanceof Position)) {
+            return false;
+        }
+        return ((Position) o).row == row && ((Position) o).col == col;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class Position implements Cloneable {
 
     @Override
     public String toString() {
-        return String.format("[%d,%d]", row, col);
+        return String.format("(%d,%d)", row, col);
     }
 
 }

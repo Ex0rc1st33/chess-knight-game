@@ -151,7 +151,7 @@ public class BoardState implements Cloneable {
         if (!(o instanceof BoardState)) {
             return false;
         }
-        return Arrays.equals(knights, ((BoardState) o).knights) && this.color == ((BoardState) o).color;
+        return Arrays.equals(knights, ((BoardState) o).knights) && color == ((BoardState) o).color;
     }
 
     @Override
@@ -175,10 +175,10 @@ public class BoardState implements Cloneable {
     @Override
     public String toString() {
         var sj = new StringJoiner(",", "{", "}");
-        sj.add(color.toString());
         for (var position : knights) {
             sj.add(position.toString());
         }
+        sj.add(color.toString());
         return sj.toString();
     }
 

@@ -87,19 +87,21 @@ public class PositionTest {
     @Test
     void testHashCode() {
         assertTrue(position.hashCode() == position.hashCode());
+        assertTrue(position.hashCode() == position.clone().hashCode());
         assertTrue(position.hashCode() == new Position(position.getRow(), position.getCol()).hashCode());
     }
 
     @Test
     void testClone() {
-        assertTrue(position.equals(position.clone()));
-        assertNotSame(position, position.clone());
+        var clone = position.clone();
+        assertTrue(position.equals(clone));
+        assertNotSame(position, clone);
     }
 
     @Test
     void testToString() {
-        assertEquals("[0,0]", position.toString());
-        assertEquals("[-2,-1]", position.getTarget(Direction.UPLEFT).toString());
+        assertEquals("(0,0)", position.toString());
+        assertEquals("(-2,-1)", position.getTarget(Direction.UPLEFT).toString());
     }
 
 }
