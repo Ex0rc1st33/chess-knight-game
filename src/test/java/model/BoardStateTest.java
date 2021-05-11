@@ -141,7 +141,7 @@ public class BoardStateTest {
         var copy = state1.clone();
         state1.move(3, Direction.UPRIGHT);
         assertEquals(copy.getKnight(3).getPosition().getTarget(Direction.UPRIGHT), state1.getKnight(3).getPosition());
-        assertNotEquals(copy.getColor(), state1.getColor());
+        assertNotEquals(copy.getNextColor(), state1.getNextColor());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class BoardStateTest {
         var copy = state2.clone();
         state2.move(1, Direction.UPLEFT);
         assertEquals(copy.getKnight(1).getPosition().getTarget(Direction.UPLEFT), state2.getKnight(1).getPosition());
-        assertNotEquals(copy.getColor(), state2.getColor());
+        assertNotEquals(copy.getNextColor(), state2.getNextColor());
     }
 
     @Test
@@ -157,7 +157,7 @@ public class BoardStateTest {
         var copy = state2.clone();
         state2.move(2, Direction.UPRIGHT);
         assertEquals(copy.getKnight(2).getPosition().getTarget(Direction.UPRIGHT), state2.getKnight(2).getPosition());
-        assertNotEquals(copy.getColor(), state2.getColor());
+        assertNotEquals(copy.getNextColor(), state2.getNextColor());
     }
 
     @Test
@@ -165,7 +165,7 @@ public class BoardStateTest {
         var copy = state4.clone();
         state4.move(5, Direction.DOWNRIGHT);
         assertEquals(copy.getKnight(5).getPosition().getTarget(Direction.DOWNRIGHT), state4.getKnight(5).getPosition());
-        assertNotEquals(copy.getColor(), state4.getColor());
+        assertNotEquals(copy.getNextColor(), state4.getNextColor());
     }
 
     @Test
@@ -173,7 +173,7 @@ public class BoardStateTest {
         var copy = state4.clone();
         state4.move(4, Direction.UPRIGHT);
         assertEquals(copy.getKnight(4).getPosition().getTarget(Direction.UPRIGHT), state4.getKnight(4).getPosition());
-        assertNotEquals(copy.getColor(), state4.getColor());
+        assertNotEquals(copy.getNextColor(), state4.getNextColor());
     }
 
     @Test
