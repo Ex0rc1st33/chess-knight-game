@@ -1,4 +1,7 @@
-package model;
+package chesspuzzle.model;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.Objects;
 
@@ -7,8 +10,8 @@ import java.util.Objects;
  */
 public class Knight implements Cloneable {
 
-    private Position position;
-    private Color color;
+    private ObjectProperty<Position> position = new SimpleObjectProperty<>();
+    private final Color color;
 
     /**
      * Creates a {@code Knight} object.
@@ -17,7 +20,7 @@ public class Knight implements Cloneable {
      * @param color    the color of the knight piece
      */
     public Knight(Position position, Color color) {
-        this.position = position;
+        this.position.set(position);
         this.color = color;
     }
 
@@ -25,6 +28,10 @@ public class Knight implements Cloneable {
      * {@return the position of the knight piece}
      */
     public Position getPosition() {
+        return position.get();
+    }
+
+    public ObjectProperty<Position> positionObjectProperty() {
         return position;
     }
 
@@ -43,12 +50,12 @@ public class Knight implements Cloneable {
         if (!(o instanceof Knight)) {
             return false;
         }
-        return ((Knight) o).position.equals(position) && ((Knight) o).color == color;
+        return ((Knight) o).getPosition().equals(this.getPosition()) && ((Knight) o).color == color;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position, color);
+        return Objects.hash(this.getPosition(), color);
     }
 
     @Override
@@ -59,13 +66,12 @@ public class Knight implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
-        copy.position = position.clone();
-        copy.color = this.color;
+        copy.position = new SimpleObjectProperty<>(this.getPosition().clone());
         return copy;
     }
 
     @Override
     public String toString() {
-        return String.format("[%s,%s]", position.toString(), color.toString());
+        return String.format("[%s,%s]", this.getPosition().toString(), color.toString());
     }
 }

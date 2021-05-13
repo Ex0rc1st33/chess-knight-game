@@ -1,4 +1,4 @@
-package model;
+package chesspuzzle.model;
 
 import org.junit.jupiter.api.Test;
 

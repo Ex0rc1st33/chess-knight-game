@@ -1,4 +1,4 @@
-package model;
+package chesspuzzle.model;
 
 import java.util.Objects;
 

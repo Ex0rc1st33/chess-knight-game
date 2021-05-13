@@ -1,4 +1,4 @@
-package model;
+package chesspuzzle.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +44,7 @@ public class KnightTest {
     @Test
     void testToString() {
         assertEquals("[(0,0),BLACK]", knight.toString());
+        System.out.println(knight);
     }
 
 }

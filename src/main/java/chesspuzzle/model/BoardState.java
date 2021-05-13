@@ -1,4 +1,6 @@
-package model;
+package chesspuzzle.model;
+
+import javafx.beans.property.ObjectProperty;
 
 import java.util.*;
 
@@ -61,12 +63,12 @@ public class BoardState implements Cloneable {
     }
 
     /**
-     * {@return a copy of the knight with the specified index}
+     * {@return a knight with the specified index}
      *
      * @param n the number (index) of the knight
      */
     public Knight getKnight(int n) {
-        return knights[n].clone();
+        return knights[n];
     }
 
     /**
@@ -74,6 +76,27 @@ public class BoardState implements Cloneable {
      */
     public Color getNextColor() {
         return nextColor;
+    }
+
+    public ObjectProperty<Position> positionObjectProperty(int pieceNumber) {
+        return knights[pieceNumber].positionObjectProperty();
+    }
+
+    public List<Position> getKnightPositions() {
+        List<Position> positions = new ArrayList<>();
+        for (Knight knight : knights) {
+            positions.add(knight.getPosition());
+        }
+        return positions;
+    }
+
+    public OptionalInt getKnightIndex(Position position) {
+        for (int i = 0; i < knights.length; i++) {
+            if (knights[i].getPosition().equals(position)) {
+                return OptionalInt.of(i);
+            }
+        }
+        return OptionalInt.empty();
     }
 
     /*
@@ -103,8 +126,8 @@ public class BoardState implements Cloneable {
         }
 
         // Checks whether any of the knights is in a position which is attacked by an enemy knight.
-        for (int i = 0; i < knights.length; i++) {
-            if (isAttacked(knights[i], knights[i].getPosition(), knights)) {
+        for (Knight knight : knights) {
+            if (isAttacked(knight, knight.getPosition(), knights)) {
                 throw new IllegalArgumentException();
             }
         }
@@ -148,7 +171,8 @@ public class BoardState implements Cloneable {
      * @param direction   the direction in which the knight is moved
      */
     public void move(int knightIndex, Direction direction) {
-        knights[knightIndex].getPosition().setTarget(direction);
+        Position newPos = knights[knightIndex].getPosition().getTarget(direction);
+        knights[knightIndex].positionObjectProperty().set(newPos);
         nextColor = nextColor == Color.WHITE ? Color.BLACK : Color.WHITE;
     }
 

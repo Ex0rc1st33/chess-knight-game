@@ -1,4 +1,4 @@
-package model;
+package chesspuzzle.model;
 
 /**
  * Represents the eight main directions.

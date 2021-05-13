@@ -1,4 +1,4 @@
-package model;
+package chesspuzzle.model;
 
 import org.junit.jupiter.api.Test;
 
@@ -139,7 +139,10 @@ public class BoardStateTest {
     @Test
     void testMove_state1_upright() {
         var copy = state1.clone();
+        System.out.println(state1);
         state1.move(3, Direction.UPRIGHT);
+        System.out.println(state1);
+        System.out.println(copy);
         assertEquals(copy.getKnight(3).getPosition().getTarget(Direction.UPRIGHT), state1.getKnight(3).getPosition());
         assertNotEquals(copy.getNextColor(), state1.getNextColor());
     }
