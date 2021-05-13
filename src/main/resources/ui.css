@@ -1,15 +1,23 @@
-.square {
+.table {
+    -fx-border-color: black;
+    -fx-border-style: solid;
+    -fx-border-width: 0.3em;
+}
+
+.tile {
+    -fx-border-color: black;
+    -fx-border-style: solid;
     -fx-border-style: solid;
 }
 
-.selected {
-    -fx-background-color: silver;
+.tile:hover {
+    -fx-opacity: 0.5;
+}
+
+/*.selected {
+    -fx-background-color: blue;
 }
 
 .selectable {
-    -fx-border-width: 5;
-}
-
-.square:hover {
-    -fx-background-color: ghostwhite;
-}
+    -fx-background-color: green;
+}*/
