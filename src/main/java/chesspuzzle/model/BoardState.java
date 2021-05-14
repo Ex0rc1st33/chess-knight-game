@@ -1,6 +1,6 @@
 package chesspuzzle.model;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.*;
 
 import java.util.*;
 
@@ -28,6 +28,8 @@ public class BoardState implements Cloneable {
     // The color of the knight piece to be moved next.
     private Color nextColor;
 
+    private BooleanProperty gameOver = new SimpleBooleanProperty();
+
     /**
      * Creates a {@code BoardState} object that corresponds to the starting state of the chess puzzle.
      */
@@ -53,6 +55,7 @@ public class BoardState implements Cloneable {
         checkKnights(knights);
         this.knights = deepClone(knights);
         this.nextColor = nextColor;
+        gameOver.set(isGoal());
     }
 
     /**
@@ -82,12 +85,12 @@ public class BoardState implements Cloneable {
         return knights[pieceNumber].positionObjectProperty();
     }
 
-    public List<Position> getKnightPositions() {
-        List<Position> positions = new ArrayList<>();
-        for (Knight knight : knights) {
-            positions.add(knight.getPosition());
-        }
-        return positions;
+    public BooleanProperty gameOverBooleanProperty() {
+        return gameOver;
+    }
+
+    public boolean getGameOver() {
+        return gameOver.get();
     }
 
     public OptionalInt getKnightIndex(Position position) {
@@ -174,6 +177,7 @@ public class BoardState implements Cloneable {
         Position newPos = knights[knightIndex].getPosition().getTarget(direction);
         knights[knightIndex].positionObjectProperty().set(newPos);
         nextColor = nextColor == Color.WHITE ? Color.BLACK : Color.WHITE;
+        gameOver.set(isGoal());
     }
 
     /**

@@ -12,10 +12,9 @@ public class ChessPuzzleApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/ui.fxml"));
-        stage.setTitle("Chess puzzle with special rules");
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainmenu.fxml"));
+        stage.setTitle("JavaFX chess puzzle");
+        stage.setScene(new Scene(root));
         stage.setResizable(false);
         stage.show();
     }

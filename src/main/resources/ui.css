@@ -13,11 +13,3 @@
 .tile:hover {
     -fx-opacity: 0.5;
 }
-
-/*.selected {
-    -fx-background-color: blue;
-}
-
-.selectable {
-    -fx-background-color: green;
-}*/

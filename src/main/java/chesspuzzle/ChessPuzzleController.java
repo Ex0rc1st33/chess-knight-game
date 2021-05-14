@@ -4,15 +4,24 @@ import chesspuzzle.model.*;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ChessPuzzleController {
 
@@ -45,6 +54,7 @@ public class ChessPuzzleController {
         createKnights();
         setSelectablePositions();
         showSelectablePositions();
+        model.gameOverBooleanProperty().addListener(this::isGoalHandler);
     }
 
     private void createBoard() {
@@ -80,13 +90,6 @@ public class ChessPuzzleController {
     }
 
     private Label createKnight(chesspuzzle.model.Color color) {
-        /*Image image = new Image(getClass().getResourceAsStream("/" + color + "_knight.png"));
-        ImageView view = new ImageView();
-        view.setImage(image);
-        view.setFitHeight(100);
-        view.setPreserveRatio(true);
-        view.setSmooth(true);
-        return view;*/
         var knight = new Label((color == Color.BLACK ? "\u265E" : "\u2658"));
         knight.setFont(new Font(100));
         knight.setTextFill(javafx.scene.paint.Color.BLACK);
@@ -111,18 +114,14 @@ public class ChessPuzzleController {
                 if (selectablePositions.contains(position)) {
                     int knightIndex = model.getKnightIndex(selected).getAsInt();
                     Direction direction = Direction.of(position.getRow() - selected.getRow(), position.getCol() - selected.getCol());
-                    model.move(knightIndex, direction);
                     deselectSelectedPosition();
+                    model.move(knightIndex, direction);
                     alterSelectionPhase();
                 } else if (position.equals(selected)) {
                     deselectSelectedPosition();
                     alterSelectionPhase();
                 }
             }
-        }
-        if (model.isGoal()) {
-            Platform.exit();
-            System.exit(0);
         }
     }
 
@@ -140,13 +139,9 @@ public class ChessPuzzleController {
 
     private void showSelectedPosition() {
         var tile = getTile(selected);
-        tile.getStyleClass().add("selected");
-        /*var arrow = new Label("\u25B2");
-        arrow.setFont(new Font(30));
-        arrow.setTextFill(javafx.scene.paint.Color.BLUE);
+        tile.getChildren().remove(tile.getChildren().size() - 1);
+        var arrow = createArrow(javafx.scene.paint.Color.BLUE);
         tile.getChildren().add(arrow);
-        System.out.println(tile.getChildren().size());*/
-
     }
 
     private void deselectSelectedPosition() {
@@ -156,7 +151,7 @@ public class ChessPuzzleController {
 
     private void hideSelectedPosition() {
         var tile = getTile(selected);
-        tile.getStyleClass().remove("selected");
+        tile.getChildren().remove(tile.getChildren().size() - 1);
     }
 
     private void setSelectablePositions() {
@@ -181,11 +176,8 @@ public class ChessPuzzleController {
     private void showSelectablePositions() {
         for (var selectablePosition : selectablePositions) {
             var tile = getTile(selectablePosition);
-            tile.getStyleClass().add("selectable");
             if (selectionPhase == SelectionPhase.SELECT_FROM) {
-                var arrow = new Label("\u25B2");
-                arrow.setFont(new Font(30));
-                arrow.setTextFill(javafx.scene.paint.Color.GREEN);
+                var arrow = createArrow(javafx.scene.paint.Color.GREEN);
                 tile.getChildren().add(arrow);
             } else {
                 Circle circle = createCircle();
@@ -197,19 +189,29 @@ public class ChessPuzzleController {
     private void hideSelectablePositions() {
         for (var selectablePosition : selectablePositions) {
             var tile = getTile(selectablePosition);
-            tile.getStyleClass().remove("selectable");
             if (selectionPhase == SelectionPhase.SELECT_TO) {
-                tile.getChildren().remove(tile.getChildren().size() - 1);
+                if (!selectablePosition.equals(selected)) {
+                    tile.getChildren().remove(tile.getChildren().size() - 1);
+                }
             } else {
                 tile.getChildren().remove(0);
             }
         }
     }
 
+    private Label createArrow(javafx.scene.paint.Color color) {
+        var arrow = new Label("\u25E4");
+        arrow.setFont(new Font(40));
+        arrow.setTextFill(color);
+        arrow.setTranslateX(-60);
+        arrow.setTranslateY(-60);
+        return arrow;
+    }
+
     private Circle createCircle() {
         Circle circle = new Circle();
         circle.setRadius(20);
-        circle.setFill(javafx.scene.paint.Color.LIGHTGRAY);
+        circle.setFill(javafx.scene.paint.Color.GRAY);
         circle.setOpacity(0.7);
         return circle;
     }
@@ -227,8 +229,60 @@ public class ChessPuzzleController {
         StackPane oldTile = getTile(oldPosition);
         StackPane newTile = getTile(newPosition);
         newTile.getChildren().addAll(oldTile.getChildren());
-        //newTile.getChildren().remove(newTile.getChildren().size() - 1);
         oldTile.getChildren().clear();
+    }
+
+    private void isGoalHandler(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+        if (newValue) {
+            handleGameOver();
+        }
+    }
+
+    private void handleGameOver() {
+        ButtonType mainMenu = new ButtonType("Main menu");
+        ButtonType close = new ButtonType("Close application");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Game over", mainMenu, close);
+        alert.setTitle("Game over!");
+        alert.setHeaderText("Congratulations, puzzle completed!");
+        alert.setContentText("Do you want to quit to main menu?");
+        alert.setGraphic(createImage("/medal.png", 80));
+        Optional<ButtonType> result = alert.showAndWait();
+        ButtonType button = result.orElse(close);
+        if (button == mainMenu) {
+            handleExitToMainMenu();
+        } else {
+            handleExit();
+        }
+    }
+
+    private ImageView createImage(String url, int height) {
+        Image image = new Image(url);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(height);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        return imageView;
+    }
+
+    @FXML
+    private void handleExitToMainMenu() {
+        Stage stage = (Stage) table.getScene().getWindow();
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/mainmenu.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Platform.exit();
+            System.exit(0);
+        }
+        stage.setTitle("JavaFX chess puzzle");
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    private void handleExit() {
+        Platform.exit();
+        System.exit(0);
     }
 
     @FXML
