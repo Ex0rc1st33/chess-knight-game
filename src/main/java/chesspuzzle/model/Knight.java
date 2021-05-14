@@ -31,6 +31,9 @@ public class Knight implements Cloneable {
         return position.get();
     }
 
+    /**
+     * {@return the wrapper object containing the position of the knight}
+     */
     public ObjectProperty<Position> positionObjectProperty() {
         return position;
     }

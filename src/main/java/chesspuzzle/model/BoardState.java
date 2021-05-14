@@ -34,13 +34,9 @@ public class BoardState implements Cloneable {
      * Creates a {@code BoardState} object that corresponds to the starting state of the chess puzzle.
      */
     public BoardState() {
-        this(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK),
-                new Knight(new Position(0, 1), Color.BLACK),
-                new Knight(new Position(0, 2), Color.BLACK),
-                new Knight(new Position(3, 0), Color.WHITE),
-                new Knight(new Position(3, 1), Color.WHITE),
-                new Knight(new Position(3, 2), Color.WHITE)
-        );
+        this(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK), new Knight(new Position(0, 1), Color.BLACK),
+                new Knight(new Position(0, 2), Color.BLACK), new Knight(new Position(3, 0), Color.WHITE),
+                new Knight(new Position(3, 1), Color.WHITE), new Knight(new Position(3, 2), Color.WHITE));
     }
 
     /**
@@ -93,6 +89,12 @@ public class BoardState implements Cloneable {
         return gameOver.get();
     }
 
+    /**
+     * {@return an {@code OptionalInt} describing the index of the knight with the specified position
+     * if a value is present, otherwise returns an empty {@code OptionalInt}}
+     *
+     * @param position the position of the desired knight
+     */
     public OptionalInt getKnightIndex(Position position) {
         for (int i = 0; i < knights.length; i++) {
             if (knights[i].getPosition().equals(position)) {
@@ -221,8 +223,7 @@ public class BoardState implements Cloneable {
             attackedFrom = target.getTarget(dir);
             if (isOnBoard(attackedFrom) && !isEmpty(attackedFrom, knights)) {
                 for (int j = 0; j < knights.length; j++) {
-                    if (knights[j].getPosition().equals(attackedFrom) &&
-                            !knights[j].getColor().equals(knight.getColor())) {
+                    if (knights[j].getPosition().equals(attackedFrom) && !knights[j].getColor().equals(knight.getColor())) {
                         return true;
                     }
                 }
@@ -232,8 +233,7 @@ public class BoardState implements Cloneable {
     }
 
     private boolean isOnBoard(Position position) {
-        return position.getRow() >= 0 && position.getRow() < BOARD_ROWCOUNT &&
-                position.getCol() >= 0 && position.getCol() < BOARD_COLUMNCOUNT;
+        return position.getRow() >= 0 && position.getRow() < BOARD_ROWCOUNT && position.getCol() >= 0 && position.getCol() < BOARD_COLUMNCOUNT;
     }
 
     private boolean isEmpty(Position position, Knight[] knights) {
