@@ -29,7 +29,7 @@ public class NameController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game.fxml"));
             Parent root = loader.load();
             GameController controller = loader.getController();
-            controller.setName(name.getText());
+            controller.setPlayerName(name.getText());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

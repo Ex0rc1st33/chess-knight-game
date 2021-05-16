@@ -1,6 +1,9 @@
 package chesspuzzle.controller;
 
 import chesspuzzle.model.*;
+import helper.leaderboard.GameResult;
+import helper.leaderboard.LeaderboardHelper;
+import jakarta.xml.bind.JAXBException;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -24,6 +27,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +54,13 @@ public class GameController {
     @FXML
     private TextField numberOfMoves;
 
-    private BoardState model = new BoardState();
+    private BoardState model = new BoardState(Color.BLACK,
+            new Knight(new Position(3, 1), Color.BLACK),
+            new Knight(new Position(1, 1), Color.BLACK),
+            new Knight(new Position(3, 0), Color.BLACK),
+            new Knight(new Position(2, 1), Color.WHITE),
+            new Knight(new Position(0, 0), Color.WHITE),
+            new Knight(new Position(0, 1), Color.WHITE));
 
     private SelectionPhase selectionPhase = SelectionPhase.SELECT_FROM;
 
@@ -57,9 +68,11 @@ public class GameController {
 
     private Position selected;
 
-    private StringProperty name = new SimpleStringProperty();
+    private StringProperty playerName = new SimpleStringProperty();
 
     private IntegerProperty moveCount = new SimpleIntegerProperty();
+
+    private LeaderboardHelper leaderboardHelper;
 
     @FXML
     private void initialize() {
@@ -70,11 +83,13 @@ public class GameController {
         model.gameOverBooleanProperty().addListener(this::isGoalHandler);
         numberOfMoves.textProperty().bind(moveCount.asString());
         moveCount.set(0);
-
+        leaderboardHelper = new LeaderboardHelper(System.getProperty("user.home") + File.separator + "leaderboard_results",
+                "leaderboard.xml",
+                10);
     }
 
-    public void setName(String name) {
-        this.name.set(name);
+    public void setPlayerName(String playerName) {
+        this.playerName.set(playerName);
     }
 
     private void createBoard() {
@@ -123,7 +138,7 @@ public class GameController {
     }
 
     private void handleClickOnTile(Position position) {
-        Logger.info("Click on square {}", position);
+        Logger.debug("Click on square {}", position);
         switch (selectionPhase) {
             case SELECT_FROM -> {
                 if (selectablePositions.contains(position)) {
@@ -136,7 +151,7 @@ public class GameController {
                     int knightIndex = model.getKnightIndex(selected).getAsInt();
                     Direction direction = Direction.of(position.getRow() - selected.getRow(), position.getCol() - selected.getCol());
                     deselectSelectedPosition();
-                    Logger.info("Moving piece {} {}", knightIndex, direction);
+                    Logger.debug("Moving piece {} {}", knightIndex, direction);
                     moveCount.set(moveCount.get() + 1);
                     model.move(knightIndex, direction);
                     alterSelectionPhase();
@@ -249,7 +264,7 @@ public class GameController {
     }
 
     private void knightPositionChange(ObservableValue<? extends Position> observable, Position oldPosition, Position newPosition) {
-        Logger.info("Move: {} -> {}", oldPosition, newPosition);
+        Logger.debug("Move: {} -> {}", oldPosition, newPosition);
         StackPane oldTile = getTile(oldPosition);
         StackPane newTile = getTile(newPosition);
         newTile.getChildren().addAll(oldTile.getChildren());
@@ -258,6 +273,7 @@ public class GameController {
 
     private void isGoalHandler(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
         if (newValue) {
+            saveResults();
             handleGameOver();
         }
     }
@@ -305,6 +321,14 @@ public class GameController {
     private void handleExit() {
         Platform.exit();
         System.exit(0);
+    }
+
+    private void saveResults() {
+        try {
+            leaderboardHelper.save(new GameResult(playerName.get(), moveCount.get()));
+        } catch (FileNotFoundException | JAXBException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
