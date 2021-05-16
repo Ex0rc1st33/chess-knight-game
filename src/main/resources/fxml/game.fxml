@@ -5,19 +5,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chesspuzzle.ChessPuzzleController">
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chesspuzzle.controller.GameController">
    <children>
       <HBox>
          <children>
-            <Button fx:id="reset" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleReset" prefHeight="30.0" prefWidth="80.0" text="Reset" textAlignment="CENTER" textFill="RED">
-               <font>
-                  <Font name="Arial Rounded MT Bold" size="12.0" />
-               </font>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Button>
-            <Region prefHeight="30.0" prefWidth="289.0" HBox.hgrow="ALWAYS" />
             <Button fx:id="exit" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleExitToMainMenu" prefHeight="30.0" prefWidth="50.0" text="Exit" textAlignment="CENTER">
                <HBox.margin>
                   <Insets />
@@ -25,6 +16,27 @@
                <font>
                   <Font name="Arial Rounded MT Bold" size="12.0" />
                </font></Button>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="reset" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleReset" prefHeight="30.0" prefWidth="60.0" text="Reset" textAlignment="CENTER" textFill="RED">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <Region layoutX="90.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="colorScheme" mnemonicParsing="false" onMouseClicked="#handleColorScheme" prefHeight="30.0" text="Select color scheme">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+            </Button>
+            <Region layoutX="255.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="50.0" text="Moves:" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font></Label>
+            <TextField fx:id="numberOfMoves" prefHeight="30.0" prefWidth="40.0" />
          </children>
          <VBox.margin>
             <Insets bottom="10.0" />

@@ -5,37 +5,41 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="chesspuzzle.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chesspuzzle.controller.MainMenuController">
     <center>
         <Label text="JavaFX chess game" BorderPane.alignment="CENTER">
             <font>
-                <Font name="Arial Rounded MT Bold" size="40.0"/>
+                <Font name="Arial Rounded MT Bold" size="40.0" />
             </font>
         </Label>
     </center>
     <bottom>
         <HBox alignment="CENTER" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="newGame" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleNewGame"
-                        text="New Game" textAlignment="CENTER">
+                <Button fx:id="newGame" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleNewGame" text="New Game" textAlignment="CENTER">
                     <font>
-                        <Font name="Arial Rounded MT Bold" size="16.0"/>
+                        <Font name="Arial Rounded MT Bold" size="16.0" />
                     </font>
                     <HBox.margin>
-                        <Insets right="50.0"/>
+                        <Insets />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="exit" mnemonicParsing="false" onMouseClicked="#handleExit" text="Exit"
-                        textAlignment="CENTER">
+                <Button fx:id="exit" mnemonicParsing="false" onMouseClicked="#handleExit" text="Exit" textAlignment="CENTER">
                     <font>
-                        <Font name="Arial Rounded MT Bold" size="16.0"/>
+                        <Font name="Arial Rounded MT Bold" size="16.0" />
                     </font>
+               <HBox.margin>
+                  <Insets left="50.0" right="50.0" />
+               </HBox.margin>
                 </Button>
+            <Button fx:id="leaderboard" mnemonicParsing="false" onMouseClicked="#handleLeaderboard" text="Leaderboard">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
+               </font>
+            </Button>
             </children>
             <BorderPane.margin>
-                <Insets bottom="15.0"/>
+                <Insets bottom="15.0" />
             </BorderPane.margin>
         </HBox>
     </bottom>

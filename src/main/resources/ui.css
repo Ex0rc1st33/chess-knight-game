@@ -13,3 +13,8 @@
 .tile:hover {
     -fx-opacity: 0.5;
 }
+
+.name {
+    -fx-font-color: lightgray;
+    -fx-font-style: italic;
+}

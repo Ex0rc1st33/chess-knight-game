@@ -1,4 +1,4 @@
-package chesspuzzle;
+package chesspuzzle.controller;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,8 +16,7 @@ public class MainMenuController {
     @FXML
     private void handleNewGame(MouseEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/ui.fxml"));
-        stage.setTitle("JavaFX chess puzzle");
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/name.fxml"));
         stage.setScene(new Scene(root));
         stage.show();
     }
@@ -26,6 +25,14 @@ public class MainMenuController {
     private void handleExit() {
         Platform.exit();
         System.exit(0);
+    }
+
+    @FXML
+    private void handleLeaderboard(MouseEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/leaderboard.fxml"));
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
 }

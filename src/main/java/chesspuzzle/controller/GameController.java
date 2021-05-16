@@ -1,7 +1,11 @@
-package chesspuzzle;
+package chesspuzzle.controller;
 
 import chesspuzzle.model.*;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -17,13 +22,14 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ChessPuzzleController {
+public class GameController {
 
     private enum SelectionPhase {
         SELECT_FROM,
@@ -40,6 +46,9 @@ public class ChessPuzzleController {
     @FXML
     private GridPane table;
 
+    @FXML
+    private TextField numberOfMoves;
+
     private BoardState model = new BoardState();
 
     private SelectionPhase selectionPhase = SelectionPhase.SELECT_FROM;
@@ -48,6 +57,10 @@ public class ChessPuzzleController {
 
     private Position selected;
 
+    private StringProperty name = new SimpleStringProperty();
+
+    private IntegerProperty moveCount = new SimpleIntegerProperty();
+
     @FXML
     private void initialize() {
         createBoard();
@@ -55,6 +68,13 @@ public class ChessPuzzleController {
         setSelectablePositions();
         showSelectablePositions();
         model.gameOverBooleanProperty().addListener(this::isGoalHandler);
+        numberOfMoves.textProperty().bind(moveCount.asString());
+        moveCount.set(0);
+
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
     }
 
     private void createBoard() {
@@ -72,7 +92,7 @@ public class ChessPuzzleController {
         var tile = new StackPane();
         tile.getStyleClass().add("tile");
         tile.setOnMouseClicked(this::handleMouseClick);
-        Image image = new Image(getClass().getResourceAsStream("/" + ((i + j) % 2 == 0 ? "light" : "dark") + "_tile.png"));
+        Image image = new Image(getClass().getResourceAsStream("/images/" + ((i + j) % 2 == 0 ? "light" : "dark") + "_tile.png"));
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
         BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, backgroundSize);
         Background background = new Background(backgroundImage);
@@ -103,6 +123,7 @@ public class ChessPuzzleController {
     }
 
     private void handleClickOnTile(Position position) {
+        Logger.info("Click on square {}", position);
         switch (selectionPhase) {
             case SELECT_FROM -> {
                 if (selectablePositions.contains(position)) {
@@ -115,6 +136,8 @@ public class ChessPuzzleController {
                     int knightIndex = model.getKnightIndex(selected).getAsInt();
                     Direction direction = Direction.of(position.getRow() - selected.getRow(), position.getCol() - selected.getCol());
                     deselectSelectedPosition();
+                    Logger.info("Moving piece {} {}", knightIndex, direction);
+                    moveCount.set(moveCount.get() + 1);
                     model.move(knightIndex, direction);
                     alterSelectionPhase();
                 } else if (position.equals(selected)) {
@@ -226,6 +249,7 @@ public class ChessPuzzleController {
     }
 
     private void knightPositionChange(ObservableValue<? extends Position> observable, Position oldPosition, Position newPosition) {
+        Logger.info("Move: {} -> {}", oldPosition, newPosition);
         StackPane oldTile = getTile(oldPosition);
         StackPane newTile = getTile(newPosition);
         newTile.getChildren().addAll(oldTile.getChildren());
@@ -245,7 +269,7 @@ public class ChessPuzzleController {
         alert.setTitle("Game over!");
         alert.setHeaderText("Congratulations, puzzle completed!");
         alert.setContentText("Do you want to quit to main menu?");
-        alert.setGraphic(createImage("/medal.png", 80));
+        alert.setGraphic(createImage("/images/medal.png", 80));
         Optional<ButtonType> result = alert.showAndWait();
         ButtonType button = result.orElse(close);
         if (button == mainMenu) {
@@ -272,10 +296,8 @@ public class ChessPuzzleController {
             root = FXMLLoader.load(getClass().getResource("/fxml/mainmenu.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
-            Platform.exit();
-            System.exit(0);
+            handleExit();
         }
-        stage.setTitle("JavaFX chess puzzle");
         stage.setScene(new Scene(root));
         stage.show();
     }
@@ -293,6 +315,15 @@ public class ChessPuzzleController {
         selectablePositions.clear();
         selected = null;
         initialize();
+    }
+
+    @FXML
+    private void handleColorScheme(MouseEvent event) throws IOException {
+        /*Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource(""));
+        stage.setTitle("JavaFX chess puzzle");
+        stage.setScene(new Scene(root));
+        stage.show();*/
     }
 
 }
