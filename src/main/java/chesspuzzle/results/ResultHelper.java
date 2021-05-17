@@ -9,19 +9,13 @@ import java.util.*;
 
 public class ResultHelper {
 
-    private final String dirPath;
+    private static final String dirPath = System.getProperty("user.home") + File.separator + "leaderboard_results";
 
-    private final String fileName;
+    private static final String fileName = "leaderboard.xml";
 
-    private final int bound;
+    private static final int bound = 50;
 
-    public ResultHelper(String dirPath, String fileName, int bound) {
-        this.dirPath = dirPath;
-        this.fileName = fileName;
-        this.bound = bound;
-    }
-
-    public void saveResult(GameResult gameResult) throws IOException, JAXBException {
+    public static void saveResult(GameResult gameResult) throws IOException, JAXBException {
         Logger.debug("Saving current game's results: {}", gameResult);
         validate();
         String path = dirPath + File.separator + fileName;
@@ -34,7 +28,7 @@ public class ResultHelper {
         JAXBHelper.toXML(leaderboard, new FileOutputStream(path));
     }
 
-    public List<GameResult> getResults(int n) throws IOException, JAXBException {
+    public static List<GameResult> getResults(int n) throws IOException, JAXBException {
         Logger.debug("Getting top {} results", n);
         validate();
         String path = dirPath + File.separator + fileName;
@@ -46,29 +40,29 @@ public class ResultHelper {
         }
     }
 
-    public void clearResults() {
+    public static void clearResults() {
         Logger.debug("Clearing results");
         File file = new File(dirPath + File.separator + fileName);
         file.delete();
     }
 
-    private void validate() throws IOException, JAXBException {
-        File file = new File(dirPath);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        file = new File(dirPath + File.separator + fileName);
-        if (!file.exists()) {
-            file.createNewFile();
-            JAXBHelper.toXML(new Leaderboard(new ArrayList<>()), new FileOutputStream(file));
+    private static void validate() throws IOException, JAXBException {
+        File sourceFile = new File(dirPath + File.separator + fileName);
+        if (!sourceFile.exists()) {
+            File sourceDir = new File(dirPath);
+            if (!sourceDir.exists()) {
+                sourceDir.mkdir();
+            }
+            sourceFile.createNewFile();
+            JAXBHelper.toXML(new Leaderboard(new ArrayList<>()), new FileOutputStream(sourceFile));
         }
     }
 
-    private void insertIntoExistingLeaderboard(GameResult gameResult, Leaderboard leaderboard) {
-        int worstMoveCount = leaderboard.getResults().get(leaderboard.getResults().size() - 1).getMoveCount();
+    private static void insertIntoExistingLeaderboard(GameResult gameResult, Leaderboard leaderboard) {
         if (leaderboard.getResults().size() < bound) {
             addElementAndSort(gameResult, leaderboard.getResults());
         } else {
+            int worstMoveCount = leaderboard.getResults().get(leaderboard.getResults().size() - 1).getMoveCount();
             if (gameResult.getMoveCount() >= worstMoveCount) {
                 Logger.debug("Player \"{}\" did not get into the leaderboard with {} moves", gameResult.getPlayerName(), gameResult.getMoveCount());
             } else {
@@ -78,7 +72,7 @@ public class ResultHelper {
         }
     }
 
-    private void addElementAndSort(GameResult gameResult, List<GameResult> gameResults) {
+    private static void addElementAndSort(GameResult gameResult, List<GameResult> gameResults) {
         gameResults.add(gameResult);
         gameResults.sort(Comparator.comparing(GameResult::getMoveCount));
     }

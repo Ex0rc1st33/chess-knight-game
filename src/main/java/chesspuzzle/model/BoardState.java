@@ -9,15 +9,15 @@ import java.util.*;
  */
 public class BoardState implements Cloneable {
 
-    /**
+    /*
      * The number of rows on the board.
      */
-    public static final int BOARD_ROWCOUNT = 4;
+    private static final int BOARD_ROWCOUNT = 4;
 
-    /**
+    /*
      * The number of columns on the board.
      */
-    public static final int BOARD_COLUMNCOUNT = 3;
+    private static final int BOARD_COLUMNCOUNT = 3;
 
     /*
     The array which contains the Knight objects represented in this state.
@@ -28,15 +28,18 @@ public class BoardState implements Cloneable {
     // The color of the knight piece to be moved next.
     private Color nextColor;
 
-    private BooleanProperty gameOver = new SimpleBooleanProperty();
+    private final BooleanProperty gameOver = new SimpleBooleanProperty();
 
     /**
      * Creates a {@code BoardState} object that corresponds to the starting state of the chess puzzle.
      */
     public BoardState() {
-        this(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK), new Knight(new Position(0, 1), Color.BLACK),
-                new Knight(new Position(0, 2), Color.BLACK), new Knight(new Position(3, 0), Color.WHITE),
-                new Knight(new Position(3, 1), Color.WHITE), new Knight(new Position(3, 2), Color.WHITE));
+        this(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK),
+                new Knight(new Position(0, 1), Color.BLACK),
+                new Knight(new Position(0, 2), Color.BLACK),
+                new Knight(new Position(3, 0), Color.WHITE),
+                new Knight(new Position(3, 1), Color.WHITE),
+                new Knight(new Position(3, 2), Color.WHITE));
     }
 
     /**
@@ -44,7 +47,7 @@ public class BoardState implements Cloneable {
      * and the knights to be represented in this state. The constructor expects a {@code Color} object,
      * and an array of six {@code Knight} objects.
      *
-     * @param nextColor the color of the chess piece to be moved next
+     * @param nextColor the color of the knight piece to be moved next
      * @param knights   the initial knight pieces
      */
     public BoardState(Color nextColor, Knight... knights) {
@@ -77,21 +80,32 @@ public class BoardState implements Cloneable {
         return nextColor;
     }
 
-    public ObjectProperty<Position> positionObjectProperty(int pieceNumber) {
-        return knights[pieceNumber].positionObjectProperty();
+    /**
+     * {@return the wrapper object containing the position of the knight with the specified index}
+     *
+     * @param n the number (index) of the knight
+     */
+    public ObjectProperty<Position> positionObjectProperty(int n) {
+        return knights[n].positionObjectProperty();
     }
 
-    public BooleanProperty gameOverBooleanProperty() {
-        return gameOver;
-    }
-
-    public boolean getGameOver() {
+    /**
+     * {@return {@code true} if the puzzle is solved, {@code false} otherwise}
+     */
+    public boolean isGameOver() {
         return gameOver.get();
     }
 
     /**
+     * {@return the wrapper object containing the {@code gameOver} attribute of this state}
+     */
+    public BooleanProperty gameOverBooleanProperty() {
+        return gameOver;
+    }
+
+    /**
      * {@return an {@code OptionalInt} describing the index of the knight with the specified position
-     * if a value is present, otherwise returns an empty {@code OptionalInt}}
+     * if a value is present, an empty {@code OptionalInt} otherwise}
      *
      * @param position the position of the desired knight
      */
@@ -222,8 +236,8 @@ public class BoardState implements Cloneable {
         for (Direction dir : Direction.values()) {
             attackedFrom = target.getTarget(dir);
             if (isOnBoard(attackedFrom) && !isEmpty(attackedFrom, knights)) {
-                for (int j = 0; j < knights.length; j++) {
-                    if (knights[j].getPosition().equals(attackedFrom) && !knights[j].getColor().equals(knight.getColor())) {
+                for (Knight k : knights) {
+                    if (k.getPosition().equals(attackedFrom) && !k.getColor().equals(knight.getColor())) {
                         return true;
                     }
                 }
@@ -232,10 +246,16 @@ public class BoardState implements Cloneable {
         return false;
     }
 
+    /*
+    Check if the specified position corresponds to a valid position of the board.
+     */
     private boolean isOnBoard(Position position) {
         return position.getRow() >= 0 && position.getRow() < BOARD_ROWCOUNT && position.getCol() >= 0 && position.getCol() < BOARD_COLUMNCOUNT;
     }
 
+    /*
+    Checks whether the tile of the board with the specified position already contains a knight or not.
+     */
     private boolean isEmpty(Position position, Knight[] knights) {
         for (Knight knight : knights) {
             if (knight.getPosition().equals(position)) {

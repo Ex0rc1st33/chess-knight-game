@@ -24,7 +24,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +61,6 @@ public class GameController {
 
     private IntegerProperty moveCount = new SimpleIntegerProperty();
 
-    private ResultHelper resultHelper;
-
     @FXML
     private void initialize() {
         Logger.debug("Initializing the board game");
@@ -74,9 +71,6 @@ public class GameController {
         state.gameOverBooleanProperty().addListener(this::isGoalHandler);
         numberOfMoves.textProperty().bind(moveCount.asString());
         moveCount.set(0);
-        resultHelper = new ResultHelper(System.getProperty("user.home") + File.separator + "leaderboard_results",
-                "leaderboard.xml",
-                50);
     }
 
     public void setPlayerName(String playerName) {
@@ -319,7 +313,7 @@ public class GameController {
 
     private void saveResults() {
         try {
-            resultHelper.saveResult(new GameResult(playerName.get(), moveCount.get()));
+            ResultHelper.saveResult(new GameResult(playerName.get(), moveCount.get()));
         } catch (IOException | JAXBException e) {
             e.printStackTrace();
         }

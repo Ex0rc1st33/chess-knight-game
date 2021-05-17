@@ -1,7 +1,7 @@
 package chesspuzzle.model;
 
 /**
- * Represents the usable colors.
+ * Represents the two usable colors.
  */
 public enum Color {
 

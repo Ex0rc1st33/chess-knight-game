@@ -18,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,15 +32,10 @@ public class LeaderboardController {
     @FXML
     private TableColumn<GameResult, Integer> moveCount;
 
-    ResultHelper resultHelper;
-
     @FXML
     private void initialize() throws IOException, JAXBException {
         Logger.debug("Initializing leaderboard");
-        resultHelper = new ResultHelper(System.getProperty("user.home") + File.separator + "leaderboard_results",
-                "leaderboard.xml",
-                50);
-        List<GameResult> topRecords = resultHelper.getResults(10);
+        List<GameResult> topRecords = ResultHelper.getResults(10);
         playerName.setCellValueFactory(new PropertyValueFactory<>("playerName"));
         moveCount.setCellValueFactory(new PropertyValueFactory<>("moveCount"));
         ObservableList<GameResult> observableResults = FXCollections.observableArrayList();
@@ -61,7 +55,7 @@ public class LeaderboardController {
     @FXML
     private void handleResetLeaderboard(MouseEvent event) throws IOException, JAXBException {
         Logger.debug("\"{}\" button pressed, resetting leaderboard", ((Button) event.getSource()).getText());
-        resultHelper.clearResults();
+        ResultHelper.clearResults();
         initialize();
     }
 
