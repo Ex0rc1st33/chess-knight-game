@@ -10,79 +10,52 @@ public class BoardStateTest {
 
     BoardState state1 = new BoardState(); //original state; init
 
-    BoardState state2 = new BoardState(Color.BLACK,
-            new Knight(new Position(3, 1), Color.BLACK),
-            new Knight(new Position(3, 2), Color.BLACK),
-            new Knight(new Position(3, 0), Color.BLACK),
-            new Knight(new Position(0, 2), Color.WHITE),
-            new Knight(new Position(0, 0), Color.WHITE),
+    BoardState state2 = new BoardState(Color.BLACK, new Knight(new Position(3, 1), Color.BLACK),
+            new Knight(new Position(3, 2), Color.BLACK), new Knight(new Position(3, 0), Color.BLACK),
+            new Knight(new Position(0, 2), Color.WHITE), new Knight(new Position(0, 0), Color.WHITE),
             new Knight(new Position(0, 1), Color.WHITE)); //a goal state
 
-    BoardState state3 = new BoardState(Color.BLACK,
-            new Knight(new Position(0, 0), Color.BLACK),
-            new Knight(new Position(1, 1), Color.BLACK),
-            new Knight(new Position(3, 1), Color.BLACK),
-            new Knight(new Position(0, 2), Color.WHITE),
-            new Knight(new Position(2, 0), Color.WHITE),
+    BoardState state3 = new BoardState(Color.BLACK, new Knight(new Position(0, 0), Color.BLACK),
+            new Knight(new Position(1, 1), Color.BLACK), new Knight(new Position(3, 1), Color.BLACK),
+            new Knight(new Position(0, 2), Color.WHITE), new Knight(new Position(2, 0), Color.WHITE),
             new Knight(new Position(2, 2), Color.WHITE)); //a state with no legal moves (dead-end)
 
-    BoardState state4 = new BoardState(Color.WHITE,
-            new Knight(new Position(2, 1), Color.BLACK),
-            new Knight(new Position(0, 1), Color.BLACK),
-            new Knight(new Position(0, 2), Color.BLACK),
-            new Knight(new Position(3, 0), Color.WHITE),
-            new Knight(new Position(3, 1), Color.WHITE),
+    BoardState state4 = new BoardState(Color.WHITE, new Knight(new Position(2, 1), Color.BLACK),
+            new Knight(new Position(0, 1), Color.BLACK), new Knight(new Position(0, 2), Color.BLACK),
+            new Knight(new Position(3, 0), Color.WHITE), new Knight(new Position(3, 1), Color.WHITE),
             new Knight(new Position(1, 1), Color.WHITE)); //a non-goal state
 
     @Test
     void testConstructor_invalid() {
-        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE,
-                new Knight(new Position(0, 0), Color.BLACK)));
-        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE,
-                new Knight(new Position(0, -1), Color.BLACK),
-                new Knight(new Position(0, 1), Color.BLACK),
-                new Knight(new Position(0, 2), Color.BLACK),
-                new Knight(new Position(3, 0), Color.WHITE),
-                new Knight(new Position(3, 1), Color.WHITE),
-                new Knight(new Position(3, 2), Color.WHITE)));
-        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE,
-                new Knight(new Position(4, 0), Color.BLACK),
-                new Knight(new Position(0, 1), Color.BLACK),
-                new Knight(new Position(0, 2), Color.BLACK),
-                new Knight(new Position(3, 0), Color.WHITE),
-                new Knight(new Position(3, 1), Color.WHITE),
-                new Knight(new Position(3, 2), Color.WHITE)));
-        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE,
-                new Knight(new Position(0, 0), Color.BLACK),
-                new Knight(new Position(0, 0), Color.BLACK),
-                new Knight(new Position(0, 0), Color.BLACK),
-                new Knight(new Position(0, 0), Color.WHITE),
-                new Knight(new Position(0, 0), Color.WHITE),
-                new Knight(new Position(0, 0), Color.WHITE)));
-        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE,
-                new Knight(new Position(0, 0), Color.BLACK),
-                new Knight(new Position(1, 1), Color.BLACK),
-                new Knight(new Position(0, 2), Color.BLACK),
-                new Knight(new Position(3, 0), Color.WHITE),
-                new Knight(new Position(3, 1), Color.WHITE),
-                new Knight(new Position(3, 2), Color.WHITE)));
+        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE, new Knight(new Position(0, 0),
+                Color.BLACK)));
+        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE, new Knight(new Position(0, -1)
+                , Color.BLACK), new Knight(new Position(0, 1), Color.BLACK), new Knight(new Position(0, 2),
+                Color.BLACK), new Knight(new Position(3, 0), Color.WHITE), new Knight(new Position(3, 1),
+                Color.WHITE), new Knight(new Position(3, 2), Color.WHITE)));
+        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE, new Knight(new Position(4, 0),
+                Color.BLACK), new Knight(new Position(0, 1), Color.BLACK), new Knight(new Position(0, 2),
+                Color.BLACK), new Knight(new Position(3, 0), Color.WHITE), new Knight(new Position(3, 1),
+                Color.WHITE), new Knight(new Position(3, 2), Color.WHITE)));
+        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE, new Knight(new Position(0, 0),
+                Color.BLACK), new Knight(new Position(0, 0), Color.BLACK), new Knight(new Position(0, 0),
+                Color.BLACK), new Knight(new Position(0, 0), Color.WHITE), new Knight(new Position(0, 0),
+                Color.WHITE), new Knight(new Position(0, 0), Color.WHITE)));
+        assertThrows(IllegalArgumentException.class, () -> new BoardState(Color.WHITE, new Knight(new Position(0, 0),
+                Color.BLACK), new Knight(new Position(1, 1), Color.BLACK), new Knight(new Position(0, 2),
+                Color.BLACK), new Knight(new Position(3, 0), Color.WHITE), new Knight(new Position(3, 1),
+                Color.WHITE), new Knight(new Position(3, 2), Color.WHITE)));
     }
 
     @Test
     void testConstructor_valid() {
-        assertDoesNotThrow(() -> new BoardState(Color.WHITE,
-                new Knight(new Position(0, 0), Color.BLACK),
-                new Knight(new Position(0, 1), Color.BLACK),
-                new Knight(new Position(0, 2), Color.BLACK),
-                new Knight(new Position(3, 0), Color.WHITE),
-                new Knight(new Position(3, 1), Color.WHITE),
+        assertDoesNotThrow(() -> new BoardState(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK),
+                new Knight(new Position(0, 1), Color.BLACK), new Knight(new Position(0, 2), Color.BLACK),
+                new Knight(new Position(3, 0), Color.WHITE), new Knight(new Position(3, 1), Color.WHITE),
                 new Knight(new Position(3, 2), Color.WHITE)));
-        assertDoesNotThrow(() -> new BoardState(Color.WHITE,
-                new Knight(new Position(3, 0), Color.BLACK),
-                new Knight(new Position(3, 1), Color.BLACK),
-                new Knight(new Position(3, 2), Color.BLACK),
-                new Knight(new Position(0, 0), Color.WHITE),
-                new Knight(new Position(0, 1), Color.WHITE),
+        assertDoesNotThrow(() -> new BoardState(Color.WHITE, new Knight(new Position(3, 0), Color.BLACK),
+                new Knight(new Position(3, 1), Color.BLACK), new Knight(new Position(3, 2), Color.BLACK),
+                new Knight(new Position(0, 0), Color.WHITE), new Knight(new Position(0, 1), Color.WHITE),
                 new Knight(new Position(0, 2), Color.WHITE)));
     }
 
@@ -139,10 +112,7 @@ public class BoardStateTest {
     @Test
     void testMove_state1_upright() {
         var copy = state1.clone();
-        System.out.println(state1);
         state1.move(3, Direction.UPRIGHT);
-        System.out.println(state1);
-        System.out.println(copy);
         assertEquals(copy.getKnight(3).getPosition().getTarget(Direction.UPRIGHT), state1.getKnight(3).getPosition());
         assertNotEquals(copy.getNextColor(), state1.getNextColor());
     }
@@ -219,10 +189,14 @@ public class BoardStateTest {
 
     @Test
     void testToString() {
-        assertEquals("{[(0,0),BLACK],[(0,1),BLACK],[(0,2),BLACK],[(3,0),WHITE],[(3,1),WHITE],[(3,2),WHITE],WHITE}", state1.toString());
-        assertEquals("{[(3,1),BLACK],[(3,2),BLACK],[(3,0),BLACK],[(0,2),WHITE],[(0,0),WHITE],[(0,1),WHITE],BLACK}", state2.toString());
-        assertEquals("{[(0,0),BLACK],[(1,1),BLACK],[(3,1),BLACK],[(0,2),WHITE],[(2,0),WHITE],[(2,2),WHITE],BLACK}", state3.toString());
-        assertEquals("{[(2,1),BLACK],[(0,1),BLACK],[(0,2),BLACK],[(3,0),WHITE],[(3,1),WHITE],[(1,1),WHITE],WHITE}", state4.toString());
+        assertEquals("{[(0,0),BLACK],[(0,1),BLACK],[(0,2),BLACK],[(3,0),WHITE],[(3,1),WHITE],[(3,2),WHITE],WHITE}",
+                state1.toString());
+        assertEquals("{[(3,1),BLACK],[(3,2),BLACK],[(3,0),BLACK],[(0,2),WHITE],[(0,0),WHITE],[(0,1),WHITE],BLACK}",
+                state2.toString());
+        assertEquals("{[(0,0),BLACK],[(1,1),BLACK],[(3,1),BLACK],[(0,2),WHITE],[(2,0),WHITE],[(2,2),WHITE],BLACK}",
+                state3.toString());
+        assertEquals("{[(2,1),BLACK],[(0,1),BLACK],[(0,2),BLACK],[(3,0),WHITE],[(3,1),WHITE],[(1,1),WHITE],WHITE}",
+                state4.toString());
     }
 
 }

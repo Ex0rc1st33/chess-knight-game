@@ -7,7 +7,7 @@
     <artifactId>chess-knight-puzzle</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <description>Java project that implements a chess puzzle with special rules.</description>
+    <description>JavaFX project that implements a chess puzzle with special rules.</description>
     <developers>
         <developer>
             <id>kalnyzalan</id>

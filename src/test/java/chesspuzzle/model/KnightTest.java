@@ -44,7 +44,8 @@ public class KnightTest {
     @Test
     void testToString() {
         assertEquals("[(0,0),BLACK]", knight.toString());
-        System.out.println(knight);
+        knight.getPosition().setTarget(Direction.DOWNRIGHT);
+        assertEquals("[(2,1),BLACK]", knight.toString());
     }
 
 }

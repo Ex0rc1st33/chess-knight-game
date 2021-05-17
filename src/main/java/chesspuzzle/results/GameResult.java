@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Class representing the results of a single game played.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = {"playerName", "moveCount"})
 @AllArgsConstructor
@@ -14,8 +17,14 @@ import lombok.NoArgsConstructor;
 @Data
 public class GameResult {
 
+    /**
+     * The name of the player.
+     */
     private String playerName;
 
+    /**
+     * The number of moves made by the player.
+     */
     private int moveCount;
 
 }
