@@ -14,10 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -76,6 +73,7 @@ public class GameController {
 
     @FXML
     private void initialize() {
+        Logger.info("Initializing the board game");
         createBoard();
         createKnights();
         setSelectablePositions();
@@ -138,7 +136,7 @@ public class GameController {
     }
 
     private void handleClickOnTile(Position position) {
-        Logger.debug("Click on square {}", position);
+        Logger.debug("Click on tile {}", position);
         switch (selectionPhase) {
             case SELECT_FROM -> {
                 if (selectablePositions.contains(position)) {
@@ -151,7 +149,7 @@ public class GameController {
                     int knightIndex = model.getKnightIndex(selected).getAsInt();
                     Direction direction = Direction.of(position.getRow() - selected.getRow(), position.getCol() - selected.getCol());
                     deselectSelectedPosition();
-                    Logger.debug("Moving piece {} {}", knightIndex, direction);
+                    Logger.debug("Moving knight [{}] {}", knightIndex, direction);
                     moveCount.set(moveCount.get() + 1);
                     model.move(knightIndex, direction);
                     alterSelectionPhase();
@@ -272,6 +270,7 @@ public class GameController {
     }
 
     private void isGoalHandler(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+        Logger.debug("Value of gameOver attribute changed: {} -> {}", oldValue, newValue);
         if (newValue) {
             saveResults();
             handleGameOver();
@@ -306,6 +305,7 @@ public class GameController {
 
     @FXML
     private void handleExitToMainMenu() {
+        Logger.debug("\"Exit\" button pressed, switching scenes");
         Stage stage = (Stage) table.getScene().getWindow();
         Parent root = null;
         try {
@@ -319,6 +319,7 @@ public class GameController {
     }
 
     private void handleExit() {
+        Logger.info("Application exited");
         Platform.exit();
         System.exit(0);
     }
@@ -332,7 +333,8 @@ public class GameController {
     }
 
     @FXML
-    private void handleReset() {
+    private void handleReset(MouseEvent event) {
+        Logger.debug("\"{}\" button pressed, resetting the puzzle", ((Button) event.getSource()).getText());
         table.getChildren().removeAll(table.getChildren());
         model = new BoardState();
         selectionPhase = SelectionPhase.SELECT_FROM;

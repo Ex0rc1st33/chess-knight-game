@@ -30,6 +30,7 @@
         <jacoco.version>0.8.7</jacoco.version>
         <surefire.version>3.0.0-M5</surefire.version>
         <tinylog.version>2.3.1</tinylog.version>
+        <jaxb.version>3.0.0</jaxb.version>
     </properties>
     <dependencies>
         <dependency>
@@ -71,13 +72,13 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>3.0.0</version>
+            <version>${jaxb.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>3.0.0</version>
+            <version>${jaxb.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

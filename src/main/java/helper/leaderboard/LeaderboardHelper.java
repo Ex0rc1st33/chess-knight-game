@@ -64,7 +64,7 @@ public class LeaderboardHelper {
         gameResults.sort(Comparator.comparing(GameResult::getMoveCount));
     }
 
-    public List<GameResult> findTop() throws FileNotFoundException, JAXBException {
+    public List<GameResult> getRecords() throws FileNotFoundException, JAXBException {
         validate();
         String path = dirPath + File.separator + fileName;
         Leaderboard leaderboard = JAXBHelper.fromXML(Leaderboard.class, new FileInputStream(path));
