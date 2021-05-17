@@ -89,6 +89,7 @@ public class PositionTest {
         assertTrue(position.hashCode() == position.hashCode());
         assertTrue(position.hashCode() == position.clone().hashCode());
         assertTrue(position.hashCode() == new Position(position.getRow(), position.getCol()).hashCode());
+        assertFalse(position.hashCode() == new Position(0, 1).hashCode());
     }
 
     @Test

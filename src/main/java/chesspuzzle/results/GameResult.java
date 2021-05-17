@@ -17,14 +17,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class GameResult {
 
-    /**
-     * The name of the player.
-     */
+    // The name of the player.
     private String playerName;
 
-    /**
-     * The number of moves made by the player.
-     */
+    // The number of moves made by the player.
     private int moveCount;
 
 }

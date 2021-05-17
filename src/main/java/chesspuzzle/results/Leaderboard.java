@@ -17,9 +17,7 @@ import java.util.List;
 @Data
 public class Leaderboard {
 
-    /**
-     * The list of the existing game results.
-     */
+    // The list of the existing game results.
     @XmlElementWrapper(name = "results")
     @XmlElement(name = "result")
     private List<GameResult> results;

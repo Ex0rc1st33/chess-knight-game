@@ -16,9 +16,7 @@ public class ResultHelper {
 
     private static final String fileName = "leaderboard.xml";
 
-    /*
-    The maximum number of results which can be stored on the leaderboard.
-     */
+    // The maximum number of results which can be stored on the leaderboard.
     private static final int bound = 50;
 
     /**
@@ -89,9 +87,7 @@ public class ResultHelper {
         }
     }
 
-    /*
-    This helper method inserts a game result into an existing, non-empty leaderboard, modifying the leaderboard.
-     */
+    // This helper method inserts a game result into an existing, non-empty leaderboard, modifying the leaderboard.
     private static void insertIntoExistingLeaderboard(GameResult gameResult, Leaderboard leaderboard) {
         if (leaderboard.getResults().size() < bound) {
             addElementAndSort(gameResult, leaderboard.getResults());
@@ -107,9 +103,7 @@ public class ResultHelper {
         }
     }
 
-    /*
-    This helper method adds a game result to an existing list of game results, then sorts it.
-     */
+    // This helper method adds a game result to an existing list of game results, then sorts it.
     private static void addElementAndSort(GameResult gameResult, List<GameResult> gameResults) {
         gameResults.add(gameResult);
         gameResults.sort(Comparator.comparing(GameResult::getMoveCount));

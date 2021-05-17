@@ -3,6 +3,7 @@ package chesspuzzle.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
+import java.util.OptionalInt;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,6 +58,13 @@ public class BoardStateTest {
                 new Knight(new Position(3, 1), Color.BLACK), new Knight(new Position(3, 2), Color.BLACK),
                 new Knight(new Position(0, 0), Color.WHITE), new Knight(new Position(0, 1), Color.WHITE),
                 new Knight(new Position(0, 2), Color.WHITE)));
+    }
+
+    @Test
+    void testGetKnightIndex() {
+        assertEquals(OptionalInt.of(0), state1.getKnightIndex(new Position(0, 0)));
+        assertEquals(OptionalInt.of(3), state1.getKnightIndex(new Position(3, 0)));
+        assertEquals(OptionalInt.empty(), state1.getKnightIndex(new Position(1, 1)));
     }
 
     @Test
@@ -179,12 +187,14 @@ public class BoardStateTest {
         assertTrue(state1.hashCode() == state1.hashCode());
         assertTrue(state1.hashCode() == state1.clone().hashCode());
         assertTrue(state1.hashCode() == new BoardState().hashCode());
+        assertFalse(state1.hashCode() == state2.hashCode());
     }
 
     @Test
     void testClone() {
-        assertTrue(state1.equals(state1.clone()));
-        assertNotSame(state1, state1.clone());
+        var clone = state1.clone();
+        assertTrue(state1.equals(clone));
+        assertNotSame(state1, clone);
     }
 
     @Test

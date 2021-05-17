@@ -9,14 +9,10 @@ import java.util.*;
  */
 public class BoardState implements Cloneable {
 
-    /*
-     * The number of rows on the board.
-     */
+    // The number of rows on the board.
     private static final int BOARD_ROWCOUNT = 4;
 
-    /*
-     * The number of columns on the board.
-     */
+    // The number of columns on the board.
     private static final int BOARD_COLUMNCOUNT = 3;
 
     /*
@@ -34,12 +30,9 @@ public class BoardState implements Cloneable {
      * Creates a {@code BoardState} object that corresponds to the starting state of the chess puzzle.
      */
     public BoardState() {
-        this(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK),
-                new Knight(new Position(0, 1), Color.BLACK),
-                new Knight(new Position(0, 2), Color.BLACK),
-                new Knight(new Position(3, 0), Color.WHITE),
-                new Knight(new Position(3, 1), Color.WHITE),
-                new Knight(new Position(3, 2), Color.WHITE));
+        this(Color.WHITE, new Knight(new Position(0, 0), Color.BLACK), new Knight(new Position(0, 1), Color.BLACK),
+                new Knight(new Position(0, 2), Color.BLACK), new Knight(new Position(3, 0), Color.WHITE),
+                new Knight(new Position(3, 1), Color.WHITE), new Knight(new Position(3, 2), Color.WHITE));
     }
 
     /**
@@ -80,11 +73,6 @@ public class BoardState implements Cloneable {
         return nextColor;
     }
 
-    /**
-     * {@return the wrapper object containing the position of the knight with the specified index}
-     *
-     * @param n the number (index) of the knight
-     */
     public ObjectProperty<Position> positionObjectProperty(int n) {
         return knights[n].positionObjectProperty();
     }
@@ -96,9 +84,6 @@ public class BoardState implements Cloneable {
         return gameOver.get();
     }
 
-    /**
-     * {@return the wrapper object containing the {@code gameOver} attribute of this state}
-     */
     public BooleanProperty gameOverBooleanProperty() {
         return gameOver;
     }
@@ -169,8 +154,10 @@ public class BoardState implements Cloneable {
             return false;
         }
 
-        // Checks whether the specified knight's new position would be out of the play area, or the tile
-        // corresponding to the new position is already occupied on the board.
+        /*
+        Checks whether the specified knight's new position would be out of the play area, or the tile
+        corresponding to the new position is already occupied on the board.
+         */
         Position target = knights[knightIndex].getPosition().getTarget(direction);
         if (!isOnBoard(target) || !isEmpty(target, knights)) {
             return false;
@@ -278,7 +265,7 @@ public class BoardState implements Cloneable {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(knights) + nextColor.hashCode();
+        return Objects.hash(Arrays.hashCode(knights), nextColor);
     }
 
     @Override
@@ -290,7 +277,6 @@ public class BoardState implements Cloneable {
             throw new AssertionError();
         }
         copy.knights = deepClone(knights);
-        copy.nextColor = this.nextColor;
         return copy;
     }
 
