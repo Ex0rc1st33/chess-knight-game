@@ -1,4 +1,4 @@
-package chesspuzzle.controller;
+package chesspuzzle.javafx.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

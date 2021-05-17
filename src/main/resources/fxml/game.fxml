@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chesspuzzle.controller.GameController">
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chesspuzzle.javafx.controller.GameController">
    <children>
       <HBox>
          <children>
@@ -42,7 +42,7 @@
             <Insets bottom="10.0" />
          </VBox.margin>
       </HBox>
-      <GridPane fx:id="table" prefHeight="600.0" prefWidth="450.0" stylesheets="@ui.css">
+      <GridPane fx:id="table" prefHeight="600.0" prefWidth="450.0" stylesheets="@../ui.css">
           <columnConstraints>
               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

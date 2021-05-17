@@ -1,4 +1,4 @@
-package chesspuzzle;
+package chesspuzzle.javafx;
 
 import java.io.IOException;
 

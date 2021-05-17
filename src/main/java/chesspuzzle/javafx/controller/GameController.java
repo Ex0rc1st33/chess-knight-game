@@ -1,8 +1,8 @@
-package chesspuzzle.controller;
+package chesspuzzle.javafx.controller;
 
 import chesspuzzle.model.*;
-import helper.leaderboard.GameResult;
-import helper.leaderboard.LeaderboardHelper;
+import chesspuzzle.results.GameResult;
+import chesspuzzle.results.ResultHelper;
 import jakarta.xml.bind.JAXBException;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -25,7 +25,6 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +50,7 @@ public class GameController {
     @FXML
     private TextField numberOfMoves;
 
-    private BoardState model = new BoardState(Color.BLACK,
-            new Knight(new Position(3, 1), Color.BLACK),
-            new Knight(new Position(1, 1), Color.BLACK),
-            new Knight(new Position(3, 0), Color.BLACK),
-            new Knight(new Position(2, 1), Color.WHITE),
-            new Knight(new Position(0, 0), Color.WHITE),
-            new Knight(new Position(0, 1), Color.WHITE));
+    private BoardState state = new BoardState();
 
     private SelectionPhase selectionPhase = SelectionPhase.SELECT_FROM;
 
@@ -69,21 +62,21 @@ public class GameController {
 
     private IntegerProperty moveCount = new SimpleIntegerProperty();
 
-    private LeaderboardHelper leaderboardHelper;
+    private ResultHelper resultHelper;
 
     @FXML
     private void initialize() {
-        Logger.info("Initializing the board game");
+        Logger.debug("Initializing the board game");
         createBoard();
         createKnights();
         setSelectablePositions();
         showSelectablePositions();
-        model.gameOverBooleanProperty().addListener(this::isGoalHandler);
+        state.gameOverBooleanProperty().addListener(this::isGoalHandler);
         numberOfMoves.textProperty().bind(moveCount.asString());
         moveCount.set(0);
-        leaderboardHelper = new LeaderboardHelper(System.getProperty("user.home") + File.separator + "leaderboard_results",
+        resultHelper = new ResultHelper(System.getProperty("user.home") + File.separator + "leaderboard_results",
                 "leaderboard.xml",
-                10);
+                50);
     }
 
     public void setPlayerName(String playerName) {
@@ -114,11 +107,11 @@ public class GameController {
     }
 
     private void createKnights() {
-        int size = model.getKnights().length;
+        int size = state.getKnights().length;
         for (int i = 0; i < size; i++) {
-            model.positionObjectProperty(i).addListener(this::knightPositionChange);
-            var knight = createKnight(model.getKnight(i).getColor());
-            getTile(model.getKnight(i).getPosition()).getChildren().add(knight);
+            state.positionObjectProperty(i).addListener(this::knightPositionChange);
+            var knight = createKnight(state.getKnight(i).getColor());
+            getTile(state.getKnight(i).getPosition()).getChildren().add(knight);
         }
     }
 
@@ -146,12 +139,12 @@ public class GameController {
             }
             case SELECT_TO -> {
                 if (selectablePositions.contains(position)) {
-                    int knightIndex = model.getKnightIndex(selected).getAsInt();
+                    int knightIndex = state.getKnightIndex(selected).getAsInt();
                     Direction direction = Direction.of(position.getRow() - selected.getRow(), position.getCol() - selected.getCol());
                     deselectSelectedPosition();
                     Logger.debug("Moving knight [{}] {}", knightIndex, direction);
                     moveCount.set(moveCount.get() + 1);
-                    model.move(knightIndex, direction);
+                    state.move(knightIndex, direction);
                     alterSelectionPhase();
                 } else if (position.equals(selected)) {
                     deselectSelectedPosition();
@@ -194,15 +187,15 @@ public class GameController {
         selectablePositions.clear();
         switch (selectionPhase) {
             case SELECT_FROM -> {
-                for (Knight knight : model.getKnights()) {
-                    if (knight.getColor() == model.getNextColor()) {
+                for (Knight knight : state.getKnights()) {
+                    if (knight.getColor() == state.getNextColor()) {
                         selectablePositions.add(knight.getPosition());
                     }
                 }
             }
             case SELECT_TO -> {
-                int knightIndex = model.getKnightIndex(selected).getAsInt();
-                for (Direction direction : model.getLegalMoves(knightIndex)) {
+                int knightIndex = state.getKnightIndex(selected).getAsInt();
+                for (Direction direction : state.getLegalMoves(knightIndex)) {
                     selectablePositions.add(selected.getTarget(direction));
                 }
             }
@@ -326,8 +319,8 @@ public class GameController {
 
     private void saveResults() {
         try {
-            leaderboardHelper.save(new GameResult(playerName.get(), moveCount.get()));
-        } catch (FileNotFoundException | JAXBException e) {
+            resultHelper.saveResult(new GameResult(playerName.get(), moveCount.get()));
+        } catch (IOException | JAXBException e) {
             e.printStackTrace();
         }
     }
@@ -336,7 +329,7 @@ public class GameController {
     private void handleReset(MouseEvent event) {
         Logger.debug("\"{}\" button pressed, resetting the puzzle", ((Button) event.getSource()).getText());
         table.getChildren().removeAll(table.getChildren());
-        model = new BoardState();
+        state = new BoardState();
         selectionPhase = SelectionPhase.SELECT_FROM;
         selectablePositions.clear();
         selected = null;
@@ -344,7 +337,7 @@ public class GameController {
     }
 
     @FXML
-    private void handleColorScheme(MouseEvent event) throws IOException {
+    private void handleColorScheme(MouseEvent event) {
         /*Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource(""));
         stage.setTitle("JavaFX chess puzzle");

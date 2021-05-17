@@ -1,4 +1,4 @@
-package helper.leaderboard;
+package chesspuzzle.results;
 
 import jakarta.xml.bind.annotation.*;
 import lombok.AllArgsConstructor;
