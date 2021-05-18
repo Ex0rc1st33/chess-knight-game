@@ -9,8 +9,9 @@
     <children>
         <TableView fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
             <columns>
-                <TableColumn fx:id="playerName" minWidth="100.0" prefWidth="299.0" text="Player name" />
-                <TableColumn fx:id="moveCount" minWidth="100.0" prefWidth="299.0" text="Number of moves" />
+                <TableColumn fx:id="playerName" minWidth="100.0" prefWidth="199.0" text="Player name" />
+                <TableColumn fx:id="moveCount" minWidth="100.0" prefWidth="200.0" text="Number of moves" />
+            <TableColumn fx:id="created" minWidth="100.0" prefWidth="199.0" text="Date of record" />
             </columns>
         </TableView>
         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="600.0">

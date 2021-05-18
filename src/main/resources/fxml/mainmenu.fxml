@@ -7,7 +7,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chesspuzzle.javafx.controller.MainMenuController">
     <center>
-        <Label text="JavaFX chess game" BorderPane.alignment="CENTER">
+        <Label text="JavaFX chess puzzle" BorderPane.alignment="CENTER">
             <font>
                 <Font name="Arial Rounded MT Bold" size="40.0" />
             </font>

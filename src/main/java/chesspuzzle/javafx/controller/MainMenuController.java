@@ -19,23 +19,24 @@ public class MainMenuController {
     private void handleNewGame(MouseEvent event) throws IOException {
         Logger.debug("\"{}\" button pressed, switching scenes", ((Button) event.getSource()).getText());
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/nameinput.fxml"));
-        stage.setScene(new Scene(root));
-        stage.show();
+        switchScenes(stage, "/fxml/nameinput.fxml");
     }
 
     @FXML
     private void handleExit() {
         Logger.info("Application exited");
         Platform.exit();
-        System.exit(0);
     }
 
     @FXML
     private void handleLeaderboard(MouseEvent event) throws IOException {
         Logger.debug("\"{}\" button pressed, switching scenes", ((Button) event.getSource()).getText());
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/leaderboard.fxml"));
+        switchScenes(stage, "/fxml/leaderboard.fxml");
+    }
+
+    private void switchScenes(Stage stage, String resource) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(resource));
         stage.setScene(new Scene(root));
         stage.show();
     }

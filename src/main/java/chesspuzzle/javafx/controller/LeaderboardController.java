@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,6 +20,8 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class LeaderboardController {
@@ -33,11 +36,28 @@ public class LeaderboardController {
     private TableColumn<GameResult, Integer> moveCount;
 
     @FXML
+    private TableColumn<GameResult, LocalDateTime> created;
+
+    @FXML
     private void initialize() throws IOException, JAXBException {
         Logger.debug("Initializing leaderboard");
         List<GameResult> topRecords = ResultHelper.getResults(10);
         playerName.setCellValueFactory(new PropertyValueFactory<>("playerName"));
         moveCount.setCellValueFactory(new PropertyValueFactory<>("moveCount"));
+        created.setCellValueFactory(new PropertyValueFactory<>("created"));
+        created.setCellFactory(column -> new TableCell<>() {
+            private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm:ss");
+
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(item.format(formatter));
+                }
+            }
+        });
         ObservableList<GameResult> observableResults = FXCollections.observableArrayList();
         observableResults.addAll(topRecords);
         table.setItems(observableResults);

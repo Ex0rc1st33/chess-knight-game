@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -97,15 +98,14 @@ public class GameController {
         Image image = new Image(getClass().getResourceAsStream("/images/" + ((i + j) % 2 == 0 ? "light" : "dark") + "_tile.png"));
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
         BackgroundImage backgroundImage = new BackgroundImage(image, null, null, null, backgroundSize);
-        Background background = new Background(backgroundImage);
-        tile.setBackground(background);
+        tile.setBackground(new Background(backgroundImage));
         return tile;
     }
 
     private void createKnights() {
         int size = state.getKnights().length;
         for (int i = 0; i < size; i++) {
-            state.positionObjectProperty(i).addListener(this::knightPositionChange);
+            state.positionObjectProperty(i).addListener(this::knightPositionChangeHandler);
             var knight = createKnight(state.getKnight(i).getColor());
             getTile(state.getKnight(i).getPosition()).getChildren().add(knight);
         }
@@ -139,8 +139,8 @@ public class GameController {
                     Direction direction = Direction.of(position.getRow() - selected.getRow(), position.getCol() - selected.getCol());
                     deselectSelectedPosition();
                     Logger.debug("Moving knight [{}] {}", knightIndex, direction);
-                    state.move(knightIndex, direction);
                     moveCount.set(moveCount.get() + 1);
+                    state.move(knightIndex, direction);
                     nextColor.setText(state.getNextColor().toString() + " piece to move next");
                     alterSelectionPhase();
                 } else if (position.equals(selected)) {
@@ -180,6 +180,19 @@ public class GameController {
         tile.getChildren().remove(tile.getChildren().size() - 1);
     }
 
+    private void hideSelectablePositions() {
+        for (var selectablePosition : selectablePositions) {
+            var tile = getTile(selectablePosition);
+            if (selectionPhase == SelectionPhase.SELECT_FROM) {
+                tile.getChildren().remove(0);
+            } else {
+                if (!selectablePosition.equals(selected)) {
+                    tile.getChildren().remove(tile.getChildren().size() - 1);
+                }
+            }
+        }
+    }
+
     private void setSelectablePositions() {
         selectablePositions.clear();
         switch (selectionPhase) {
@@ -212,19 +225,6 @@ public class GameController {
         }
     }
 
-    private void hideSelectablePositions() {
-        for (var selectablePosition : selectablePositions) {
-            var tile = getTile(selectablePosition);
-            if (selectionPhase == SelectionPhase.SELECT_TO) {
-                if (!selectablePosition.equals(selected)) {
-                    tile.getChildren().remove(tile.getChildren().size() - 1);
-                }
-            } else {
-                tile.getChildren().remove(0);
-            }
-        }
-    }
-
     private Label createArrow(javafx.scene.paint.Color color, double size) {
         Label arrow = new Label("\u27A4 ");
         arrow.setFont(new Font(size));
@@ -252,7 +252,7 @@ public class GameController {
         throw new AssertionError();
     }
 
-    private void knightPositionChange(ObservableValue<? extends Position> observable, Position oldPosition, Position newPosition) {
+    private void knightPositionChangeHandler(ObservableValue<? extends Position> observable, Position oldPosition, Position newPosition) {
         Logger.debug("Move: {} -> {}", oldPosition, newPosition);
         StackPane oldTile = getTile(oldPosition);
         StackPane newTile = getTile(newPosition);
@@ -265,6 +265,14 @@ public class GameController {
         if (newValue) {
             saveResults();
             handleGameOver();
+        }
+    }
+
+    private void saveResults() {
+        try {
+            ResultHelper.saveResult(new GameResult(playerName.get(), moveCount.get(), LocalDateTime.now()));
+        } catch (IOException | JAXBException e) {
+            e.printStackTrace();
         }
     }
 
@@ -312,15 +320,6 @@ public class GameController {
     private void handleExit() {
         Logger.info("Application exited");
         Platform.exit();
-        System.exit(0);
-    }
-
-    private void saveResults() {
-        try {
-            ResultHelper.saveResult(new GameResult(playerName.get(), moveCount.get()));
-        } catch (IOException | JAXBException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML

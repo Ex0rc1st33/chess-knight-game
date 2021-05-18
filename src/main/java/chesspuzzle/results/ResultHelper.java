@@ -16,7 +16,7 @@ public class ResultHelper {
 
     private static final String fileName = "leaderboard.xml";
 
-    // The maximum number of results which can be stored on the leaderboard.
+    // The maximum number of results which can be stored in the specified file.
     private static final int bound = 50;
 
     /**
@@ -94,8 +94,7 @@ public class ResultHelper {
         } else {
             int worstMoveCount = leaderboard.getResults().get(leaderboard.getResults().size() - 1).getMoveCount();
             if (gameResult.getMoveCount() >= worstMoveCount) {
-                Logger.debug("Player \"{}\" did not get into the leaderboard with {} moves",
-                        gameResult.getPlayerName(), gameResult.getMoveCount());
+                Logger.debug("Player \"{}\" did not get into the leaderboard with {} moves", gameResult.getPlayerName(), gameResult.getMoveCount());
             } else {
                 addElementAndSort(gameResult, leaderboard.getResults());
                 leaderboard.getResults().remove(leaderboard.getResults().size() - 1);
