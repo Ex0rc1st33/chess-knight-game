@@ -23,16 +23,23 @@ public class MainMenuController {
     }
 
     @FXML
-    private void handleExit() {
-        Logger.info("Application exited");
-        Platform.exit();
-    }
-
-    @FXML
     private void handleLeaderboard(MouseEvent event) throws IOException {
         Logger.debug("\"{}\" button pressed, switching scenes", ((Button) event.getSource()).getText());
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         switchScenes(stage, "/fxml/leaderboard.fxml");
+    }
+
+    @FXML
+    private void handleRules(MouseEvent event) throws IOException {
+        Logger.debug("\"{}\" button pressed, switching scenes", ((Button) event.getSource()).getText());
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        switchScenes(stage, "/fxml/rules.fxml");
+    }
+
+    @FXML
+    private void handleExit() {
+        Logger.info("Application exited");
+        Platform.exit();
     }
 
     private void switchScenes(Stage stage, String resource) throws IOException {

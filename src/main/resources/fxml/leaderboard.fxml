@@ -7,7 +7,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chesspuzzle.javafx.controller.LeaderboardController">
     <children>
-        <TableView fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-border-color: black; -fx-border-width: 1px;">
+        <TableView fx:id="table" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-border-color: black; -fx-border-width: 1px;">
             <columns>
                 <TableColumn fx:id="playerName" minWidth="100.0" prefWidth="198.0" text="Player name" />
                 <TableColumn fx:id="moveCount" minWidth="100.0" prefWidth="199.0" text="Number of moves" />
