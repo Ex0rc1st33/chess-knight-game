@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
-public class NameController {
+public class NameInputController {
 
     @FXML
     private TextField name;

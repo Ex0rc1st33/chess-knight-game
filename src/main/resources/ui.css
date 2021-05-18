@@ -7,7 +7,6 @@
 .tile {
     -fx-border-color: black;
     -fx-border-style: solid;
-    -fx-border-style: solid;
 }
 
 .tile:hover {

@@ -32,8 +32,7 @@ import java.util.Optional;
 public class GameController {
 
     private enum SelectionPhase {
-        SELECT_FROM,
-        SELECT_TO;
+        SELECT_FROM, SELECT_TO;
 
         public SelectionPhase alter() {
             return switch (this) {
@@ -48,6 +47,9 @@ public class GameController {
 
     @FXML
     private TextField numberOfMoves;
+
+    @FXML
+    private Label nextColor;
 
     private BoardState state = new BoardState();
 
@@ -71,6 +73,7 @@ public class GameController {
         state.gameOverBooleanProperty().addListener(this::isGoalHandler);
         numberOfMoves.textProperty().bind(moveCount.asString());
         moveCount.set(0);
+        nextColor.setText(state.getNextColor().toString() + " piece to move next");
     }
 
     public void setPlayerName(String playerName) {
@@ -83,7 +86,6 @@ public class GameController {
             for (int j = 0; j < table.getColumnCount(); j++) {
                 var tile = createTile(i, j);
                 table.add(tile, j, i);
-
             }
         }
     }
@@ -137,8 +139,9 @@ public class GameController {
                     Direction direction = Direction.of(position.getRow() - selected.getRow(), position.getCol() - selected.getCol());
                     deselectSelectedPosition();
                     Logger.debug("Moving knight [{}] {}", knightIndex, direction);
-                    moveCount.set(moveCount.get() + 1);
                     state.move(knightIndex, direction);
+                    moveCount.set(moveCount.get() + 1);
+                    nextColor.setText(state.getNextColor().toString() + " piece to move next");
                     alterSelectionPhase();
                 } else if (position.equals(selected)) {
                     deselectSelectedPosition();
@@ -163,7 +166,7 @@ public class GameController {
     private void showSelectedPosition() {
         var tile = getTile(selected);
         tile.getChildren().remove(tile.getChildren().size() - 1);
-        var arrow = createArrow(javafx.scene.paint.Color.BLUE);
+        var arrow = createArrow(javafx.scene.paint.Color.BLUE, 25);
         tile.getChildren().add(arrow);
     }
 
@@ -200,10 +203,10 @@ public class GameController {
         for (var selectablePosition : selectablePositions) {
             var tile = getTile(selectablePosition);
             if (selectionPhase == SelectionPhase.SELECT_FROM) {
-                var arrow = createArrow(javafx.scene.paint.Color.GREEN);
+                Label arrow = createArrow(javafx.scene.paint.Color.GREEN, 25);
                 tile.getChildren().add(arrow);
             } else {
-                Circle circle = createCircle();
+                Circle circle = createCircle(javafx.scene.paint.Color.GRAY, 20, 0.7);
                 tile.getChildren().add(circle);
             }
         }
@@ -222,20 +225,21 @@ public class GameController {
         }
     }
 
-    private Label createArrow(javafx.scene.paint.Color color) {
-        var arrow = new Label("\u25E4");
-        arrow.setFont(new Font(40));
+    private Label createArrow(javafx.scene.paint.Color color, double size) {
+        Label arrow = new Label("\u27A4 ");
+        arrow.setFont(new Font(size));
         arrow.setTextFill(color);
-        arrow.setTranslateX(-60);
-        arrow.setTranslateY(-60);
+        arrow.setTranslateX(-50);
+        arrow.setTranslateY(-50);
+        arrow.setRotate(45);
         return arrow;
     }
 
-    private Circle createCircle() {
+    private Circle createCircle(javafx.scene.paint.Color color, double size, double opacity) {
         Circle circle = new Circle();
-        circle.setRadius(20);
-        circle.setFill(javafx.scene.paint.Color.GRAY);
-        circle.setOpacity(0.7);
+        circle.setRadius(size);
+        circle.setFill(color);
+        circle.setOpacity(opacity);
         return circle;
     }
 
@@ -271,7 +275,7 @@ public class GameController {
         alert.setTitle("Game over!");
         alert.setHeaderText("Congratulations, puzzle completed!");
         alert.setContentText("Do you want to quit to main menu?");
-        alert.setGraphic(createImage("/images/medal.png", 80));
+        alert.setGraphic(createImageView("/images/medal.png", 80));
         Optional<ButtonType> result = alert.showAndWait();
         ButtonType button = result.orElse(close);
         if (button == mainMenu) {
@@ -281,8 +285,8 @@ public class GameController {
         }
     }
 
-    private ImageView createImage(String url, int height) {
-        Image image = new Image(url);
+    private ImageView createImageView(String url, int height) {
+        Image image = new Image(getClass().getResourceAsStream(url));
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(height);
         imageView.setPreserveRatio(true);
@@ -328,15 +332,6 @@ public class GameController {
         selectablePositions.clear();
         selected = null;
         initialize();
-    }
-
-    @FXML
-    private void handleColorScheme(MouseEvent event) {
-        /*Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource(""));
-        stage.setTitle("JavaFX chess puzzle");
-        stage.setScene(new Scene(root));
-        stage.show();*/
     }
 
 }

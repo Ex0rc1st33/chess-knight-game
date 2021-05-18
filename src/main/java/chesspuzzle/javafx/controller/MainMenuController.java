@@ -19,7 +19,7 @@ public class MainMenuController {
     private void handleNewGame(MouseEvent event) throws IOException {
         Logger.debug("\"{}\" button pressed, switching scenes", ((Button) event.getSource()).getText());
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/name.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/nameinput.fxml"));
         stage.setScene(new Scene(root));
         stage.show();
     }

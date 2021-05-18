@@ -26,11 +26,11 @@
                </HBox.margin>
             </Button>
             <Region layoutX="90.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
-            <Button fx:id="colorScheme" mnemonicParsing="false" onMouseClicked="#handleColorScheme" prefHeight="30.0" text="Select color scheme">
+            <Label fx:id="nextColor" alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" text="Label" textAlignment="CENTER">
                <font>
-                  <Font name="Arial Rounded MT Bold" size="12.0" />
+                  <Font size="14.0" />
                </font>
-            </Button>
+            </Label>
             <Region layoutX="255.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="50.0" text="Moves:" textAlignment="CENTER">
                <font>
