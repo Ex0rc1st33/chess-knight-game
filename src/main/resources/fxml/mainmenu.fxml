@@ -37,7 +37,7 @@
             </Button>
             <Button fx:id="rules" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#handleRules" text="Rules" textAlignment="CENTER">
                <font>
-                  <Font size="16.0" />
+                  <Font name="Arial Rounded MT Bold" size="16.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="20.0" />

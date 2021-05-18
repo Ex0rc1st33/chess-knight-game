@@ -46,7 +46,7 @@ public class LeaderboardController {
         moveCount.setCellValueFactory(new PropertyValueFactory<>("moveCount"));
         created.setCellValueFactory(new PropertyValueFactory<>("created"));
         created.setCellFactory(column -> new TableCell<>() {
-            private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm:ss");
+            private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
 
             @Override
             protected void updateItem(LocalDateTime item, boolean empty) {
